@@ -4,6 +4,7 @@ import { ImageBackground } from 'react-native';
 import getStartedbackground from './../../../assets/images/getStartedbackground.png';
 import CustomButtom from '../../components/CustomButtom/CustomButtom';
 import saucedLogo from "./../../../assets/images/saucedlogo.png"
+import BottomNavigation from '../../components/BottomNavigation/BottomNavigation';
 const { width } = Dimensions.get('window');
 
 // Utility for responsive font size
@@ -37,7 +38,6 @@ const Home = () => {
               onPress={() => console.log("hello from get started")}
               title={"Get Started"}
             />
-
       </View>
     </SafeAreaView>
              </ImageBackground>  

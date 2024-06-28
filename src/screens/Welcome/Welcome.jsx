@@ -6,6 +6,7 @@ import WelcomeLists from '../../components/WelcomeList/WelcomeList';
 import back from "./../../../assets/images/back.png"
 import CustomButtom from '../../components/CustomButtom/CustomButtom';
 import Header from '../../components/Header/Header';
+import BottomNavigation from '../../components/BottomNavigation/BottomNavigation';
 const { width } = Dimensions.get('window');
 
 // Utility for responsive font size
