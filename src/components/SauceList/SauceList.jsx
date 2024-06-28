@@ -1,29 +1,38 @@
 import React from 'react';
-import { View, Text, Image, FlatList, StyleSheet } from 'react-native';
+import { View, Text, FlatList, StyleSheet } from 'react-native';
+import { scale, verticalScale, moderateScale } from 'react-native-size-matters';
+
 import SingleSauce from '../SingleSauce/SingleSauce';
 
-const SauceList = ({ data = [] , title=""}) => {
-    return (<View style={{
-        gap:20
-    }}>
-        <Text style={{
-            color:"white",
-            lineHeight:28.8,
-            fontSize:24,
-            fontWeight:600,
-        }}>{title}</Text>
-        <FlatList
-        horizontal
-            data={data}
-            keyExtractor={item => item?.title}
-            renderItem={({ item }) =><SingleSauce url={item.url} title={item.title} />}
-            ItemSeparatorComponent={() => <View style={{marginRight:20}} />}
-        />
-    </View>)
-   
-}
-    ;
-
-
+const SauceList = ({ data = [], title = "" }) => {
+    return (
+        <View style={styles.container}>
+            <Text style={styles.title}>{title}</Text>
+            <FlatList
+             showsHorizontalScrollIndicator={false} 
+                horizontal
+                data={data}
+                keyExtractor={item => item?.title}
+                renderItem={({ item }) => <SingleSauce url={item.url} title={item.title} />}
+                ItemSeparatorComponent={() => <View style={styles.separator} />}
+            />
+        </View>
+    );
+};
 
 export default SauceList;
+
+const styles = StyleSheet.create({
+    container: {
+        gap: verticalScale(20), // This property might not work as expected in all RN versions. If it doesn't, consider adding margins manually in child components.
+    },
+    title: {
+        color: "white",
+        lineHeight: verticalScale(29),
+        fontSize: moderateScale(24),
+        fontWeight: "600",
+    },
+    separator: {
+        marginRight: scale(20),
+    }
+});

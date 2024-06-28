@@ -1,34 +1,42 @@
-import { Image, StyleSheet, Text, View } from 'react-native'
-import React from 'react'
+import React from 'react';
+import { Image, StyleSheet, Text, View } from 'react-native';
+import { scale, verticalScale, moderateScale } from 'react-native-size-matters';
+
 const SingleSauce = ({
-    url="",
+    url = "",
     title
 }) => {
-  return (
-    <View style={{
-        borderColor:"#FFA100",
-        borderWidth:1,
-        borderRadius:7,
-        height:160,
-        width:110,
+    return (
+        <View style={styles.container}>
+            <Image
+                source={url}
+                style={styles.image}
+            />
+            <Text style={styles.text}>
+              {title}
+            </Text>
+        </View>
+    );
+};
 
-    }}>
+export default SingleSauce;
 
-
-    <Image
-    
-    source={url}
-    style={{
-        width:"100%",
-        height:"100%"
-    }}>
-
-
-    </Image>
-    </View>
-  )
-}
-
-export default SingleSauce
-
-const styles = StyleSheet.create({})
+const styles = StyleSheet.create({
+    container: {
+        borderRadius: moderateScale(7),
+        height: verticalScale(160),
+        width: scale(110),
+        position:"relative"
+    },
+    image: {
+        width: "100%",
+        height: "100%",
+    },
+    text:{
+      position:"absolute",
+      bottom:15,
+      left:10,
+      color:"white",
+      width:"90%",
+    }
+});

@@ -7,7 +7,12 @@ import sauce6 from "./assets/images/sauce6.png"
 import sauce7 from "./assets/images/sauce7.png"
 import sauce8 from "./assets/images/sauce8.png"
 
-
+import brand1 from "./assets/images/brand1.png";
+import brand2 from "./assets/images/brand2.png";
+import brand3 from "./assets/images/brand3.png";
+import brand4 from "./assets/images/brand4.png";
+import brand5 from "./assets/images/brand5.png";
+import brand6 from "./assets/images/brand6.png";
 export const welcomeLists = [
     "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
     "Maecenas id metus efficitur, sollicitudin mauris in, pellentesque risus.",
@@ -62,3 +67,37 @@ export const handleText = (value,name, updaterFn) => {
       title: "Mustard Sauce"
     }
   ];
+
+  export const Brands = [
+    {
+      url: brand1,
+    },
+    {
+      url: brand4,
+    },
+    {
+      url: brand6,
+    },
+    
+    {
+      url: brand2,
+    },
+    {
+      url: brand3,
+    },
+    {
+      url: brand4,
+    },
+    {
+      url: brand5,
+    },
+    {
+      url: brand6,
+    } ,{
+      url: brand2,
+    },
+    {
+      url: brand3,
+    },
+  ];
+  
