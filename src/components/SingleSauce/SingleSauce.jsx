@@ -26,11 +26,14 @@ const styles = StyleSheet.create({
         borderRadius: moderateScale(7),
         height: verticalScale(160),
         width: scale(110),
-        position:"relative"
+        position:"relative",
+      elevation:5
+
     },
     image: {
         width: "100%",
         height: "100%",
+        objectFit:"contain"
     },
     text:{
       position:"absolute",

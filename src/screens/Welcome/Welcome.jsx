@@ -27,7 +27,7 @@ const Welcome = () => {
 
         <View style={{
           paddingHorizontal: 20,
-          paddingBottom:80,
+          paddingBottom:100,
           gap:40,
           justifyContent:"space-between",
           flex:1

@@ -13,15 +13,16 @@ import Home from './src/screens/Home/Home';
 const Stack = createNativeStackNavigator();
 
 function AppRouter() {
+ 
   return (
     <NavigationContainer>
       <Stack.Navigator screenOptions={{ headerShown: false }}>
         <Stack.Screen name="Layout" component={Layout} />
-        <Stack.Screen name="Home" component={Home} />
+        {/* <Stack.Screen name="Home" component={Home} />
         <Stack.Screen name="Welcome" component={Welcome} />
         <Stack.Screen name="SignIn" component={SignIn} />
         <Stack.Screen name="SignUp" component={SignUp} />
-        <Stack.Screen name="Test" component={Test} />
+        <Stack.Screen name="Test" component={Test} /> */}
       </Stack.Navigator>
     </NavigationContainer>
   );

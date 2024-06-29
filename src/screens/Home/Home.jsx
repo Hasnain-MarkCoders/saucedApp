@@ -40,7 +40,7 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingHorizontal: moderateScale(20),
     paddingTop: verticalScale(80),
-    paddingBottom: verticalScale(80),
+    paddingBottom: verticalScale(100),
     justifyContent: "flex-end",
     alignItems: "center",
     gap: verticalScale(20),

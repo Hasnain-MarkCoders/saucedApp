@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Text, View, SafeAreaView, ImageBackground, TouchableOpacity, Dimensions , KeyboardAvoidingView, ScrollView} from 'react-native';
+import { Text, View, SafeAreaView, ImageBackground, TouchableOpacity, Dimensions , ScrollView} from 'react-native';
 import home from './../../../assets/images/home.png';
 import Header from '../../components/Header/Header';
 import CustomInput from '../../components/CustomInput/CustomInput';
@@ -9,8 +9,6 @@ import google from "./../../../assets/images/google-icon.png";
 import apple from "./../../../assets/images/apple-icon.png";
 import fb from "./../../../assets/images/facebook-icon.png";
 import IconButton from '../../components/IconButton/IconButton';
-import BottomNavigation from '../../components/BottomNavigation/BottomNavigation';
-import Layout from '../Layout/layout';
 
 // Get screen dimensions
 const { width } = Dimensions.get('window');
@@ -39,7 +37,7 @@ const SignUp = () => {
           flex:1,
         }}>
         <Header title="Sign up" description="Sign up with one of the following." />
-        <View style={{ paddingHorizontal: 20, flex: 1, justifyContent: "space-between", paddingVertical: 40, gap:40 }}>
+        <View style={{ paddingHorizontal: 20, flex: 1, justifyContent: "space-between", paddingVertical: 40,paddingBottom:100, gap:40 }}>
           <View style={{gap:20}}>
             <CustomInput
               onChange={handleText}

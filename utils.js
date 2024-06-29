@@ -71,33 +71,44 @@ export const handleText = (value,name, updaterFn) => {
   export const Brands = [
     {
       url: brand1,
+      title: "Alpha Inc."
     },
     {
       url: brand4,
+      title: "Beta Technologies"
     },
     {
       url: brand6,
+      title: "Gamma Solutions"
     },
-    
     {
       url: brand2,
+      title: "Delta Corp."
     },
     {
       url: brand3,
+      title: "Epsilon Ltd."
     },
     {
       url: brand4,
+      title: "Zeta Industries"
     },
     {
       url: brand5,
+      title: "Eta Products"
     },
     {
       url: brand6,
-    } ,{
+      title: "Theta Services"
+    },
+    {
       url: brand2,
+      title: "Iota Enterprises"
     },
     {
       url: brand3,
-    },
+      title: "Kappa Co."
+    }
   ];
+  
   

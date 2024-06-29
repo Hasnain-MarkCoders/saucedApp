@@ -20,6 +20,7 @@ const CustomInput = ({title="",name="", placeholder="",showTitle=true, secureTex
        style={{
         color:"white",
         borderBottomColor:"white",
+        
         borderBottomWidth:1,
         
         ...inputStyle

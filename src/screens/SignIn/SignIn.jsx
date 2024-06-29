@@ -35,7 +35,7 @@ const SignIn = () => {
       <SafeAreaView style={{ flex: 1 }}>
         <ScrollView style={{ flex: 1 }}>
         <Header title="Sign in" description="Sign in with your data that you entered during registration." />
-        <View style={{ paddingHorizontal: 20, flex: 1, justifyContent: "space-between", paddingVertical: 40, gap:responsiveFontSize(80) }}>
+        <View style={{ paddingHorizontal: 20, flex: 1, justifyContent: "space-between", paddingVertical: 40,paddingBottom:100, gap:responsiveFontSize(80) }}>
           <View style={{
             gap:20
           }}>

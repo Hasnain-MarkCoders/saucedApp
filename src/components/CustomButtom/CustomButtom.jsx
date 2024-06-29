@@ -15,6 +15,7 @@ const CustomButtom = ({
         borderColor:"red",
         borderWidth:1,
         padding:20, 
+      elevation:5,
         borderRadius:10,
         ...buttonstyle 
       }}>
