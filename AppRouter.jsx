@@ -3,28 +3,30 @@
 import * as React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import Layout from './src/screens/Layout/layout';
-import SignIn from './src/screens/SignIn/SignIn';
-import SignUp from './src/screens/SignUp/SignUp';
-import Test from './src/screens/Test/Test';
-import Welcome from './src/screens/Welcome/Welcome';
-import Home from './src/screens/Home/Home';
+import PrivateStack from './src/screens/PrivateStack/PrivateStack';
+import PublicStack from './src/screens/PublicStack/PublicStack';
+import { useSelector } from 'react-redux';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import UserStack from './src/screens/UserStack/UserStack';
+import DrawerStack from './src/screens/DrawerStack/DrawerStack';
 
 const Stack = createNativeStackNavigator();
 
 function AppRouter() {
- 
+  const auth = useSelector(state => state.auth)
+  const { authenticated } = auth
+
   return (
-    <NavigationContainer>
-      <Stack.Navigator screenOptions={{ headerShown: false }}>
-        <Stack.Screen name="Layout" component={Layout} />
-        {/* <Stack.Screen name="Home" component={Home} />
-        <Stack.Screen name="Welcome" component={Welcome} />
-        <Stack.Screen name="SignIn" component={SignIn} />
-        <Stack.Screen name="SignUp" component={SignUp} />
-        <Stack.Screen name="Test" component={Test} /> */}
-      </Stack.Navigator>
-    </NavigationContainer>
+    <GestureHandlerRootView>
+      <NavigationContainer>
+        <Stack.Navigator screenOptions={{ headerShown: false }}>{
+          authenticated ? <Stack.Screen name="Drawer" component={DrawerStack}/>
+            :
+            <Stack.Screen name="Public" component={PublicStack} />}
+        </Stack.Navigator>
+      </NavigationContainer>
+    </GestureHandlerRootView>
+
   );
 }
 

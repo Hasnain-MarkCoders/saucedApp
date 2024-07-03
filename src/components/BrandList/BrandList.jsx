@@ -18,7 +18,7 @@ const BrandList = ({ data = [], title = "" }) => {
              showsHorizontalScrollIndicator={false} 
                 horizontal
                 data={data1}
-                keyExtractor={item => item?.title}
+                keyExtractor={(item, index) => index.toString()}
                 renderItem={({ item }) => <SingleBrand url={item.url} title={item.title} />}
                 ItemSeparatorComponent={() => <View style={styles.separator} />}
             />
@@ -26,7 +26,7 @@ const BrandList = ({ data = [], title = "" }) => {
               showsHorizontalScrollIndicator={false} 
                 horizontal
                 data={data2}
-                keyExtractor={item => item?.title}
+                keyExtractor={(item, index) => index.toString()}
                 renderItem={({ item }) => <SingleBrand url={item.url} title={item.title} />}
                 ItemSeparatorComponent={() => <View style={styles.separator} />}
             />

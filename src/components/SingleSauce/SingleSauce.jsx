@@ -27,7 +27,6 @@ const styles = StyleSheet.create({
         height: verticalScale(160),
         width: scale(110),
         position:"relative",
-      elevation:5
 
     },
     image: {

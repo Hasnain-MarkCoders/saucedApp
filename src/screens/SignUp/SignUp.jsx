@@ -9,6 +9,7 @@ import google from "./../../../assets/images/google-icon.png";
 import apple from "./../../../assets/images/apple-icon.png";
 import fb from "./../../../assets/images/facebook-icon.png";
 import IconButton from '../../components/IconButton/IconButton';
+import { useNavigation } from '@react-navigation/native';
 
 // Get screen dimensions
 const { width } = Dimensions.get('window');
@@ -20,6 +21,7 @@ const responsiveFontSize = (f) => {
 };
 
 const SignUp = () => {
+  const navigation = useNavigation()
   const [data, setData] = useState({
     fullName: "",
     email: "",
@@ -30,13 +32,17 @@ const SignUp = () => {
     console.log(data)
   }, [data])
 
+
+  const navigateToSignIn = ()=>{
+    navigation.navigate('SignIn')
+  }
   return (
     <ImageBackground style={{ flex: 1, width: '100%', height: '100%', }} source={home}>
       <SafeAreaView style={{ flex: 1, marginBottom:50}}>
         <ScrollView style={{
           flex:1,
         }}>
-        <Header title="Sign up" description="Sign up with one of the following." />
+        <Header cb={navigateToSignIn} title="Sign up" description="Sign up with one of the following." />
         <View style={{ paddingHorizontal: 20, flex: 1, justifyContent: "space-between", paddingVertical: 40,paddingBottom:100, gap:40 }}>
           <View style={{gap:20}}>
             <CustomInput
@@ -80,7 +86,7 @@ const SignUp = () => {
             </View>
             <View style={{ flexDirection: "row" }}>
               <Text style={{ color: "white", fontSize: responsiveFontSize(1.6), lineHeight: 18 }}>Already Have an account? </Text>
-              <TouchableOpacity onPress={() => console.log("hello from Register")} >
+              <TouchableOpacity onPress={() => navigateToSignIn()} >
                 <Text style={{ color: "#FFA100", fontSize: responsiveFontSize(1.6), lineHeight: 18 }}>Login</Text>
               </TouchableOpacity>
             </View>

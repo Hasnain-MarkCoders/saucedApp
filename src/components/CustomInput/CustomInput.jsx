@@ -1,7 +1,7 @@
 import { StyleSheet, Text, TextInput, View } from 'react-native'
 import React from 'react'
 
-const CustomInput = ({title="",name="", placeholder="",showTitle=true, secureTextEntry=false ,onChange=()=>{}, value="", updaterFn = ()=>{},containterStyle={},labelStyle={} ,inputStyle={}}) => {
+const CustomInput = ({title="",name="", cb=()=>{},placeholder="",showTitle=true, secureTextEntry=false ,onChange=()=>{}, value="", updaterFn = ()=>{},containterStyle={},labelStyle={} ,inputStyle={}}) => {
   return (
     <View style={{
         ...containterStyle,
@@ -20,12 +20,10 @@ const CustomInput = ({title="",name="", placeholder="",showTitle=true, secureTex
        style={{
         color:"white",
         borderBottomColor:"white",
-        
         borderBottomWidth:1,
-        
         ...inputStyle
        }}
-       onChangeText={(text) => onChange(text, name,updaterFn )}
+       onChangeText={(text) => {onChange(text, name,updaterFn ), cb()}}
         value={value}
       />
       

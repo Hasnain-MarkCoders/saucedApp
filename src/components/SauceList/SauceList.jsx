@@ -12,7 +12,7 @@ const SauceList = ({ data = [], title = "" }) => {
              showsHorizontalScrollIndicator={false} 
                 horizontal
                 data={data}
-                keyExtractor={item => item?.title}
+                keyExtractor={(item, index) => index.toString()}
                 renderItem={({ item }) => <SingleSauce url={item.url} title={item.title} />}
                 ItemSeparatorComponent={() => <View style={styles.separator} />}
             />
