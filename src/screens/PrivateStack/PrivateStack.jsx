@@ -1,24 +1,16 @@
-import React, { useState, useEffect } from 'react';
-import { Keyboard, View, Image, Text } from 'react-native';
+import { View, Image, Text } from 'react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import Animated, { FadeIn, FadeOut } from 'react-native-reanimated';
-
 import Home from '../Home/Home';
 import homeIcon from "./../../../assets/images/homeicon.png";
-import Logout from '../../components/Logout/Logout';
 import Awards from '../Awards/Awards';
-import awardicon from  "./../../../assets/images/awardicon.png"
-import profileicon from  "./../../../assets/images/profileicon.png"
-import FollowerScreen from '../FollowerScreen/FollowerScreen';
-import FollowingScreen from '../FollowingScreen/FollowingScreen';
+import awardicon from "./../../../assets/images/awardicon.png"
+import profileicon from "./../../../assets/images/profileicon.png"
 import ProfileScreen from '../Profile/Profile';
-import SettingScreen from '../SettingScreen/SettingScreen';
-import EditProfileScreen from '../EditProfileScreen/EditProfileScreen';
-
-const LogoutScreen = () => {
-    return null;
-};
-
+import Product from '../Product/Product';
+import QRScreen from '../QRScreen/QRScreen';
+import qrImage from "./../../../assets/images/qr_transparent.png"
+import search from "./../../../assets/images/search.png"
+import { scale } from 'react-native-size-matters';
 const Tab = createBottomTabNavigator();
 
 const PrivateStack = () => {
@@ -26,7 +18,7 @@ const PrivateStack = () => {
         <Tab.Navigator
             screenOptions={{
                 tabBarShowLabel: false,
-                tabBarHideOnKeyboard:true,
+                tabBarHideOnKeyboard: true,
                 headerShown: false,
                 tabBarIcon: () => null,
                 tabBarStyle: {
@@ -48,7 +40,35 @@ const PrivateStack = () => {
                     tabBarIcon: ({ focused }) => (
                         <View style={{ gap: 8, alignItems: "center" }}>
                             <Image source={homeIcon} />
-                            <Text style={{ fontSize: 12, lineHeight: 18, color: "white" }}>Home</Text>
+                            <Text style={{ fontSize: 12,   color: focused ? 'black' : 'white',lineHeight: 18, color: "white" }}>Home</Text>
+                        </View>
+                    ),
+                    animation: "fade"
+                }}
+            />
+
+            <Tab.Screen
+                name="Search"
+                // initialParams={{ customFunction: () =>{}}}
+                component={Product}
+                options={{
+                    tabBarIcon: ({ focused }) => (
+                        <View style={{ gap: 8, alignItems: "center" }}>
+                            <Image source={search} />
+                            <Text style={{ fontSize: 12, lineHeight: 18, color: "white" }}>Search</Text>
+                        </View>
+                    ),
+                    animation: "fade"
+                }}
+            />
+            <Tab.Screen
+                name="QRScan"
+                component={QRScreen}
+                // initialParams={{ customFunction: () =>{}}}
+                options={{
+                    tabBarIcon: ({ focused }) => (
+                        <View style={{ gap: 8, alignItems: "center", backgroundColor: "white", padding: scale(20), borderRadius: scale(50) }}>
+                            <Image source={qrImage} />
                         </View>
                     ),
                     animation: "fade"
@@ -68,10 +88,10 @@ const PrivateStack = () => {
                     animation: "fade"
                 }}
             />
-               
-              
-             <Tab.Screen
-                name="Profile"
+
+
+            <Tab.Screen
+                name="Main"
                 component={ProfileScreen}
                 options={{
                     tabBarIcon: ({ focused }) => (
@@ -83,14 +103,18 @@ const PrivateStack = () => {
                     animation: "fade"
                 }}
             />
-            <Tab.Screen
+
+            
+
+
+            {/* <Tab.Screen
                 name="Logout"
                 component={LogoutScreen}
                 options={{
                     tabBarIcon: ({ focused }) => <Logout />,
                     animation: "fade"
                 }}
-            />
+            /> */}
         </Tab.Navigator>
     );
 };

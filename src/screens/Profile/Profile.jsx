@@ -106,7 +106,8 @@ const ProfileScreen = () => {
                 }} title={"Followers"} showText={false} />
 
                 <FlatList
-
+  showsHorizontalScrollIndicator={false} 
+  showsVerticalScrollIndicator={false}
                     data={[1, 1,1]}
                     renderItem={({ item, index }) => {
                         return (

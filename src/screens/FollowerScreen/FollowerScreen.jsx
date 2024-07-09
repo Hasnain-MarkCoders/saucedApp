@@ -98,11 +98,14 @@ const FollowerScreen = () => {
     }, [page]);
     return (
         <ImageBackground style={{ flex: 1, width: '100%', height: '100%' }} source={home}>
-            <SafeAreaView style={{ flex: 1, paddingBottom: isKeyBoard ? 0 :verticalScale(70) }}>
+            <SafeAreaView style={{ flex: 1, paddingBottom: isKeyBoard ? 0 :verticalScale(0) }}>
                 <Header cb={() => navigation.navigate("Home")} showProfilePic={false} headerContainerStyle={{
                     paddingBottom: scale(20)
                 }} title={"Followers"} showText={false} />
-                <FlatList data={[1, 1]}
+                <FlatList 
+                 showsVerticalScrollIndicator={false}
+                 showsHorizontalScrollIndicator={false}
+                data={[1, 1]}
                     renderItem={({ item, index }) => {
                         return (
                             <View style={{

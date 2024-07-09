@@ -41,7 +41,11 @@ const SocialSignIn = () => {
   return (
     <ImageBackground style={{ flex: 1, width: '100%', height: '100%' }} source={home}>
       <SafeAreaView style={{ flex: 1 }}>
-        <ScrollView style={{ flex: 1 }}>
+        <ScrollView
+        
+        showsHorizontalScrollIndicator={false} 
+        showsVerticalScrollIndicator={false}
+        style={{ flex: 1 }}>
           <Header cb={navigateToSignUp} title="Sign in" description="Sign in with your data that you entered during registration." />
           <View style={{ paddingHorizontal: 20, flex: 1, justifyContent: "space-between", paddingVertical: 40, paddingBottom: 100, gap: responsiveFontSize(10) }}>
 

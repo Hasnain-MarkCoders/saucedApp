@@ -22,8 +22,8 @@ const IconButton = ({
       <Image
         source={url}
       style={{
-        minWidthwidth:40,
-        minHeightheight:40,
+        // minWidth:40,
+        // minHeight:40,
         ...imageStyle
       }}/>
   </TouchableOpacity>

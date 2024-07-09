@@ -27,7 +27,7 @@ const AwardList = ({
         }
       }}
       keyExtractor={(item, index) => index.toString()}
-       renderItem={({ item }) => <Award  url={item?.urls?.raw} infoText={""} showText={false} />}
+       renderItem={({ item }) => <Award  url={item?.urls?.small} infoText={""} showText={false} />}
    />
 
    {

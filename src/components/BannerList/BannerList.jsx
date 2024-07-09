@@ -16,7 +16,8 @@ const BannerList = ({
 }}>
 
 <FlatList
-showsHorizontalScrollIndicator={false} 
+ showsVerticalScrollIndicator={false}
+ showsHorizontalScrollIndicator={false} 
    horizontal
    data={data}
    onEndReachedThreshold={0.5}
@@ -24,7 +25,7 @@ showsHorizontalScrollIndicator={false}
     if (!loading && hasMore) setPage(currentPage => currentPage + 1);
   }}
   keyExtractor={(item, index) => index.toString()}
-   renderItem={({ item }) => <Banner  url={item?.urls?.raw} infoText={""} showText={false} />}
+   renderItem={({ item }) => <Banner  url={item?.urls?.small} infoText={""} showText={false} />}
    ItemSeparatorComponent={() => <View style={{
     marginRight:20
    }} />}

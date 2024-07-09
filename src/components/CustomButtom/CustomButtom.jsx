@@ -1,4 +1,4 @@
-import { StyleSheet, Text, TouchableOpacity } from 'react-native'
+import { ActivityIndicator, StyleSheet, Text, TouchableOpacity } from 'react-native'
 import React from 'react'
 
 const CustomButtom = ({
@@ -7,7 +7,8 @@ const CustomButtom = ({
     buttonstyle={},
     buttonTextStyle={},
     onPress=()=>{},
-    Icon=()=>null
+    Icon=()=>null,
+    loading=false
 }) => {
   return (
     <TouchableOpacity
@@ -22,10 +23,13 @@ const CustomButtom = ({
         ...buttonstyle ,
 
       }}>
+     { loading? <ActivityIndicator size="small" color="white" />: <>
         {
           showIcon?<Icon/> :null
         }
     <Text style={{color:"white",fontSize:10,textAlign:"center", ...buttonTextStyle}}>{title}</Text>
+        </>
+  }
   </TouchableOpacity>
   )
 }

@@ -1,8 +1,8 @@
-import { StyleSheet, Text, View, Image } from 'react-native'
+import {  Text, View, Image } from 'react-native'
 import React from 'react'
 import dot from "./../../../assets/images/dot.png"
 import { scale } from 'react-native-size-matters'
-const CustomListItem = ({text}) => {
+const ProductBulletPoint = ({text}) => {
   return (
     <View
     style={{
@@ -32,4 +32,4 @@ const CustomListItem = ({text}) => {
   )
 }
 
-export default CustomListItem
+export default ProductBulletPoint

@@ -16,9 +16,7 @@ const EditProfileScreen = () => {
     const navigation = useNavigation()
  
 const dispatch =  useDispatch()
-    const navigateToSignUp = () => {
-        navigation.navigate('SignUp')
-    }
+  
     const handleLogout=()=>{
         dispatch(handleAuth({
             user:null,
@@ -30,8 +28,11 @@ const dispatch =  useDispatch()
     return (
         <ImageBackground style={{ flex: 1, width: '100%', height: '100%' }} source={home}>
             <SafeAreaView style={{ flex: 1 }}>
-                <ScrollView style={{ flex: 1 }}>
-                    <Header cb={navigateToSignUp} showProfilePic={false} showDescription={false} title="Edit profile"/>
+                <ScrollView
+                 showsVerticalScrollIndicator={false}
+                 showsHorizontalScrollIndicator={false}
+                style={{ flex: 1 }}>
+                    <Header cb={() => navigation.navigate("Home")} showProfilePic={false} showDescription={false} title="Edit profile"/>
                     <View style={{ paddingHorizontal: 20, flex: 1, justifyContent: "space-between", paddingVertical: 40, paddingBottom: 100, gap: scale(10) }}>
                     <View style={{
                                         marginBottom: scale(20)

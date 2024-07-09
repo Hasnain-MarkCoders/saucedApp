@@ -9,7 +9,8 @@ const SauceList = ({ data = [], title = "" }) => {
         <View style={styles.container}>
             <Text style={styles.title}>{title}</Text>
             <FlatList
-             showsHorizontalScrollIndicator={false} 
+              showsVerticalScrollIndicator={false}
+              showsHorizontalScrollIndicator={false}
                 horizontal
                 data={data}
                 keyExtractor={(item, index) => index.toString()}

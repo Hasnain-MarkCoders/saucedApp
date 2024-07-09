@@ -1,17 +1,17 @@
-import { Dimensions, FlatList, StyleSheet, View } from "react-native";
+import {  FlatList, StyleSheet, View } from "react-native";
 import { welcomeLists } from "../../../utils";
-import CustomListItem from "../CustomListItem/CustomListItem";
 import { scale } from "react-native-size-matters";
+import ProductBulletPoint from "../ProductBulletPoint/ProductBulletPoint";
 
 const renderItem = ({ item }) =>
-    (<CustomListItem text={item} />)
+    (<ProductBulletPoint text={item} />)
   ;
-const WelcomeLists = () => {
+const ProductsBulletsList = () => {
     return (
       <View style={{}}>
         <FlatList
-         showsVerticalScrollIndicator={false}
-         showsHorizontalScrollIndicator={false}
+          showsHorizontalScrollIndicator={false} 
+          showsVerticalScrollIndicator={false}
           data={welcomeLists}
           renderItem={renderItem}
           keyExtractor={(item, index) => index.toString()}
@@ -28,4 +28,4 @@ const WelcomeLists = () => {
   })
 
 
-  export default WelcomeLists
+  export default ProductsBulletsList

@@ -44,12 +44,16 @@ const Awards = () => {
     }, [page]);
     return (
         <ImageBackground style={{ flex: 1, width: '100%', height: '100%' }} source={home}>
-            <SafeAreaView style={{ flex: 1, paddingBottom: verticalScale(90) }}>
+            <SafeAreaView
+            
+            style={{ flex: 1, paddingBottom: verticalScale(65) }}>
                 <Header headerContainerStyle={{
                     paddingBottom: verticalScale(30)
                 }} showText={false} />
 
                 <FlatList
+                 showsVerticalScrollIndicator={false}
+                 showsHorizontalScrollIndicator={false}
                     data={[1, 1]}
                     renderItem={({ item, index }) => {
                         return (<View style={{

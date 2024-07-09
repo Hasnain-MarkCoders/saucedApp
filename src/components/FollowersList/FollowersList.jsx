@@ -28,7 +28,7 @@ const FollowersList = ({
         }
       }}
        keyExtractor={(item, index) => index.toString()}
-       renderItem={({ item }) => <UserCard url={item?.urls?.raw} title={"Follow"} name={"Hasnain"} showText={false} />}
+       renderItem={({ item }) => <UserCard url={item?.urls?.small} title={"Follow"} name={"Hasnain"} showText={false} />}
 
    />
    {

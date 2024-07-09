@@ -4,35 +4,38 @@ import SingleBrand from '../SingleBrand/SingleBrand';
 import { scale, verticalScale, moderateScale } from 'react-native-size-matters';
 
 const BrandList = ({ data = [], title = "" }) => {
-    const data1 = data.slice(0, data.length/2)
-    const data2 = data.slice(data.length/2, data.length)
+    const data1 = data.slice(0, data.length / 2)
+    const data2 = data.slice(data.length / 2, data.length)
 
     return (
         <View style={styles.container}>
             <Text style={styles.title}>{title}</Text>
             <View style={{
-                gap:15
+                gap: 15
             }}>
 
-            <FlatList
-             showsHorizontalScrollIndicator={false} 
-                horizontal
-                data={data1}
-                keyExtractor={(item, index) => index.toString()}
-                renderItem={({ item }) => <SingleBrand url={item.url} title={item.title} />}
-                ItemSeparatorComponent={() => <View style={styles.separator} />}
-            />
-             <FlatList
-              showsHorizontalScrollIndicator={false} 
-                horizontal
-                data={data2}
-                keyExtractor={(item, index) => index.toString()}
-                renderItem={({ item }) => <SingleBrand url={item.url} title={item.title} />}
-                ItemSeparatorComponent={() => <View style={styles.separator} />}
-            />
+                <FlatList 
+                    showsHorizontalScrollIndicator={false}
+                    showsVerticalScrollIndicator={false}
+
+                    horizontal
+                    data={data1}
+                    keyExtractor={(item, index) => index.toString()}
+                    renderItem={({ item }) => <SingleBrand url={item.url} title={item.title} />}
+                    ItemSeparatorComponent={() => <View style={styles.separator} />}
+                />
+                <FlatList
+                    showsHorizontalScrollIndicator={false}
+                    showsVerticalScrollIndicator={false}
+                    horizontal
+                    data={data2}
+                    keyExtractor={(item, index) => index.toString()}
+                    renderItem={({ item }) => <SingleBrand url={item.url} title={item.title} />}
+                    ItemSeparatorComponent={() => <View style={styles.separator} />}
+                />
             </View>
 
-            
+
         </View>
     );
 };

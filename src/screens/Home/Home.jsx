@@ -1,29 +1,29 @@
 import React, { useEffect, useState } from 'react';
-import { Image, ImageBackground, ScrollView, StyleSheet, Text, TouchableOpacity, View , Alert} from 'react-native';
+import { Image, ImageBackground, ScrollView, StyleSheet, Text, TouchableOpacity, View, Alert } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { scale, verticalScale, moderateScale, moderateVerticalScale } from 'react-native-size-matters';
-
+import { scale, verticalScale, moderateScale } from 'react-native-size-matters';
 import home from './../../../assets/images/home.png';
-import banner from "./../../../assets/images/banner.png";
+import close from "./../../../assets/images/close.png";
+import flashon from "./../../../assets/images/flashon.png";
+import flashoff from "./../../../assets/images/flashoff.png";
 import qr from "./../../../assets/images/qr.png";
-import SingleSauce from '../../components/SingleSauce/SingleSauce';
 import { Brands, featuredSauces, handleText, topRatedSauces } from '../../../utils';
 import SauceList from '../../components/SauceList/SauceList';
 import BrandList from '../../components/BrandList/BrandList';
 import CustomInput from '../../components/CustomInput/CustomInput';
 import CustomButtom from '../../components/CustomButtom/CustomButtom';
-import Ionicons from 'react-native-vector-icons/Ionicons';
 import QRCodeScanner from 'react-native-qrcode-scanner';
 import { RNCamera } from 'react-native-camera';
-import Banner from '../../components/Banner/Banner';
 import BannerList from '../../components/BannerList/BannerList';
 import axios from 'axios';
-import {UNSPLASH_URL, VITE_UNSPLASH_ACCESSKEY} from "@env"
+import { UNSPLASH_URL, VITE_UNSPLASH_ACCESSKEY } from "@env"
+import QRScreen from '../QRScreen/QRScreen';
+import { useNavigation } from '@react-navigation/native';
 const Home = () => {
-
-    const [showQR, setShowQR] = useState(false)
+    const navigation =useNavigation()
+    const [showQRCode, setShowQRCode] = useState(false)
     const [torch, setTorch] = useState(false)
-    const [banners, setBanners ] = useState([])
+    const [banners, setBanners] = useState([])
     const [page, setPage] = useState(1)
     const [hasMore, setHasMore] = useState(true)
     const [loading, setLoading] = useState(false);
@@ -33,14 +33,14 @@ const Home = () => {
 
 
     onSuccess = e => {
-      
+
         Alert.alert("QR Code", e.data);
     };
 
     useEffect(() => {
         const fetchPhotos = async () => {
             if (!hasMore || loading) return;
-    
+
             setLoading(true);
             try {
                 const res = await axios.get(`${UNSPLASH_URL}/photos`, {
@@ -49,7 +49,7 @@ const Home = () => {
                         page: page
                     }
                 });
-    
+
                 if (res.data.length === 0) {
                     setHasMore(false);
                 } else {
@@ -61,70 +61,22 @@ const Home = () => {
                 setLoading(false);
             }
         };
-    
+
         fetchPhotos();
     }, [page]);
     return (
 
         <>
-            {showQR ?
-                <View style={{
-                    position: "relative",
-                    width: "100%",
-                    height: "100%"
-                }}>
-                    <QRCodeScanner
-                    containerStyle={{
-                        backgroundColor:"black"
-                    }}
-                    reactivateTimeout={5000}
-                        fadeIn={true}
-                        showMarker={true}
-                        reactivate={true}
-                        onRead={onSuccess}
-                        flashMode={torch ? RNCamera.Constants.FlashMode.torch:RNCamera.Constants.FlashMode.off}
-                        cameraStyle={{ width: '100%', height: '100%' }} // Making QR scanner full screen
-                        topContent={
-                            <Text>Scan the QR code from your computer.</Text>
-                        }
-                    />
-                    <TouchableOpacity
-                    onPress={()=>setShowQR(false)}
-                    
-                    style={{
-                        position: "absolute",
-                        top: 10,
-                        right: 10
-                    }}>
-                        <Ionicons name={"close-sharp"} size={50} color={"black"} />
-                    </TouchableOpacity>
-
-                    <TouchableOpacity
-                    onPress={()=>setTorch(prev=>!prev)}
-                    
-                    style={{
-                        position: "absolute",
-                        top: 10,
-                        left: 10
-                    }}>
-                        <Ionicons name={torch?"flash-off-outline":"flash-outline"} size={50} color={"black"} />
-                    </TouchableOpacity>
-
-                    
-                </View>
-
+            {showQRCode ?
+            <QRScreen   navigation={navigation} showQRCode={showQRCode} closeQR={()=>{setShowQRCode(false)}}/>
 
 
                 : <ImageBackground source={home} style={styles.background}>
-                    <ScrollView style={styles.scrollView}>
+                    <ScrollView
+                        showsVerticalScrollIndicator={false}
+                        showsHorizontalScrollIndicator={false}
+                        style={styles.scrollView}>
                         <SafeAreaView style={styles.safeArea}>
-
-
-
-
-
-
-
                             <View style={styles.searchContainer}>
                                 <View style={styles.searchBarContainer}>
                                     <CustomInput
@@ -145,7 +97,7 @@ const Home = () => {
 
                                         }} />
 
-                                    <TouchableOpacity onPress={() => { setShowQR(true) }}>
+                                    <TouchableOpacity onPress={() => { setShowQRCode(true) }}>
                                         <View>
 
                                             <Image source={qr} style={styles.qrImage} />
@@ -157,7 +109,7 @@ const Home = () => {
                                 </Text>
 
                             </View>
-                            <BannerList loading={loading} hasMore={hasMore} setPage={setPage} data ={banners}/>
+                            <BannerList loading={loading} hasMore={hasMore} setPage={setPage} data={banners} />
 
                             <View style={styles.contentContainer}>
 

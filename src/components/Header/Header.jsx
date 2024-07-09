@@ -19,7 +19,7 @@ const Header = ({
 let url = ""
   const auth = useSelector(state => state.auth)
   const { user, authenticated } = auth
-  url = user?.url
+  url = auth?.url
   const titleArray = title?.split(" ")
   return (
 

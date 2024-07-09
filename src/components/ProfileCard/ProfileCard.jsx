@@ -5,9 +5,10 @@ import { useSelector } from 'react-redux'
 
 const ProfileCard = () => {
     const auth = useSelector(state => state.auth)
-    console.log(auth)
-    const url = auth?.user?.url || ""
-    const name = auth?.user?.name || ""
+    console.log("auth", auth)
+    const url = auth?.url || ""
+    const name =  auth?.user?.user?.displayName || ""
+    console.log( )
     const circles = [1,1,1,1,1]
     return (
         <View style={{

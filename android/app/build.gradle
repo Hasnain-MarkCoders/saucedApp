@@ -2,6 +2,10 @@ apply plugin: "com.android.application"
 apply plugin: "org.jetbrains.kotlin.android"
 apply plugin: "com.facebook.react"
 
+
+def enableSeparateBuildPerCPUArchitecture = true
+
+
 /**
  * This is the configuration block to customize your React Native Android app.
  * By default you don't need to apply any configuration, just uncomment the lines you need.
@@ -97,6 +101,15 @@ android {
             keyPassword SAUCED_RELEASE_KEY_PASSWORD
         }
     }
+       splits {
+        // **hasnain init: Enable separate build per CPU architecture**
+        abi {
+            enable enableSeparateBuildPerCPUArchitecture
+            reset()
+            include "armeabi-v7a", "x86", "arm64-v8a", "x86_64"
+        }
+    }
+
     buildTypes {
         debug {
             signingConfig signingConfigs.debug
@@ -114,6 +127,26 @@ android {
 dependencies {
     // The version of react-native is set by the React Native Gradle Plugin
     implementation("com.facebook.react:react-android")
+    implementation platform('com.google.firebase:firebase-bom:33.1.1')
+    implementation ('com.google.android.gms:play-services-auth')
+
+
+    // Firebase Authentication
+    implementation 'com.google.firebase:firebase-auth'
+
+    // Firebase Firestore
+    implementation 'com.google.firebase:firebase-firestore'
+
+    // Firebase Cloud Messaging
+    implementation 'com.google.firebase:firebase-messaging'
+
+    // Firebase Storage
+    implementation 'com.google.firebase:firebase-storage'
+
+    implementation 'com.facebook.android:facebook-login:latest.release'
+
+
+
 
     if (hermesEnabled.toBoolean()) {
         implementation("com.facebook.react:hermes-android")
@@ -124,3 +157,5 @@ dependencies {
 
 apply from: file("../../node_modules/@react-native-community/cli-platform-android/native_modules.gradle"); applyNativeModulesAppBuildGradle(project)
 apply from: "../../node_modules/react-native-vector-icons/fonts.gradle"
+apply plugin: 'com.google.gms.google-services'
+
