@@ -19,10 +19,16 @@ const dispatch =  useDispatch()
   
     const handleLogout=()=>{
         dispatch(handleAuth({
-            user:null,
-            accessToken:null,
-            refreshToken:null,
-            authenticated:false
+            "token": null,
+            "uid": null,
+            "name": null,
+            "email": null,
+            "provider": null,
+            "type": null,
+            "status": null,
+            "_id": null,
+            "url":null,
+            "authenticated": false,
           }))
     }
     return (

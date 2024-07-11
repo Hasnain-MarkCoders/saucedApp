@@ -8,6 +8,9 @@ import { useSelector } from 'react-redux';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import DrawerStack from './src/screens/DrawerStack/DrawerStack';
 import Product from './src/screens/Product/Product';
+import EditModal from './src/components/EditModal.jsx/EditModal';
+import SettingScreen from './src/screens/SettingScreen/SettingScreen';
+import Home from './src/screens/Home/Home';
 const Stack = createNativeStackNavigator();
 function AppRouter() {
   const auth = useSelector(state => state.auth)

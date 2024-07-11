@@ -11,7 +11,8 @@ const HorizontalUsersList = ({
 }) => {
   return (
     <View style={{
-        gap:scale(20)
+        gap:scale(20),
+        flex:1
     }}>
 
         <FlatList

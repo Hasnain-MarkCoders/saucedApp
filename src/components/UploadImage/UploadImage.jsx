@@ -4,20 +4,29 @@ import { scale } from 'react-native-size-matters';
 import { useDispatch, useSelector } from 'react-redux';
 import { launchImageLibrary } from 'react-native-image-picker';
 import { handleAuth } from '../../../android/app/Redux/userReducer';
+import useAxios from '../../../Axios/useAxios';
 
 const UploadImage = () => {
     const auth = useSelector(state => state.auth);
-    const [imageUri, setImageUri] = useState(auth?.user?.url);
+    const [imageUri, setImageUri] = useState(auth?.url);
+    const axiosInstance = useAxios()
     
     const dispatch = useDispatch()
-    const handleImage = (url)=>{
+    const handleImage = async(url, asset)=>{
+        const data = new FormData()
+        data.append("image", asset)
+        try {
+            const res = await axiosInstance.post("/change-image", data);
+            console.log(res);
+            dispatch(handleAuth({ url }));
+        } catch (error) {
+            console.error('Error uploading image:', error);
+            Alert.alert('Upload Error', 'Failed to upload image.');
+        }
         dispatch(handleAuth({
-            ...auth,
-            user:{
-                ...auth.user,
-                url:url
-            }
+                url
         }))
+
     }
 
     const handleImagePicker = () => {
@@ -37,7 +46,13 @@ const UploadImage = () => {
             } else {
                 const source = { uri: response.assets[0].uri };
                 setImageUri(source.uri);
-                handleImage(source.uri)
+
+                const file = {
+                    uri: response?.assets[0]?.uri,
+                    type: response?.assets[0]?.type,
+                    name: response?.assets[0]?.fileName,
+                }
+                handleImage(source.uri,file)
                 // Here you can also dispatch an action to update the user's profile picture in your backend
             }
         });

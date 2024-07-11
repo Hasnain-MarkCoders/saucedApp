@@ -7,7 +7,7 @@ const ProfileCard = () => {
     const auth = useSelector(state => state.auth)
     console.log("auth", auth)
     const url = auth?.url || ""
-    const name =  auth?.user?.user?.displayName || ""
+    const name =  auth?.user?.user?.displayName || auth?.name
     console.log( )
     const circles = [1,1,1,1,1]
     return (

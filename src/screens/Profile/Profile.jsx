@@ -57,7 +57,7 @@ const ProfileScreen = () => {
                     }
                 });
 
-                setData(res.data.results);
+                setData(prev=>[...prev, ...res.data.results]);
 
             } catch (error) {
                 console.error('Failed to fetch photos:', error);

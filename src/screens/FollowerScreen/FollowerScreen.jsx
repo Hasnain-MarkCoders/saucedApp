@@ -56,7 +56,7 @@ const FollowerScreen = () => {
                     }
                 });
 
-                setData(res.data.results);
+                setData(prev=>[...prev, ...res?.data?.results]);
 
             } catch (error) {
                 console.error('Failed to fetch photos:', error);
@@ -83,6 +83,8 @@ const FollowerScreen = () => {
                     }
                 });
                 console.log("page", page)
+        console.log("loading", loading)
+
                 if (res.data.length === 0) {
                     setHasMore(false);
                 } else {
@@ -91,11 +93,14 @@ const FollowerScreen = () => {
             } catch (error) {
                 console.error('Failed to fetch photos:', error);
             } finally {
-                setLoading(false);
+                    setLoading(false);
+
             }
         };
         fetchPhotos();
     }, [page]);
+
+
     return (
         <ImageBackground style={{ flex: 1, width: '100%', height: '100%' }} source={home}>
             <SafeAreaView style={{ flex: 1, paddingBottom: isKeyBoard ? 0 :verticalScale(0) }}>

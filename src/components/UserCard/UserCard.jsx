@@ -1,8 +1,12 @@
 import { Alert, Image, StyleSheet, Text, View } from 'react-native'
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { scale } from 'react-native-size-matters'
 import CustomButtom from '../CustomButtom/CustomButtom'
+import Lightbox from 'react-native-lightbox';
+
 const UserCard = ({url="", name="", title=""}) => {
+  const [LightBox, setLightBox] = useState(false)
+
   return (
     <View style={{
         minWidth:scale(140),
@@ -17,17 +21,22 @@ const UserCard = ({url="", name="", title=""}) => {
         paddingHorizontal:scale(15),
         margin:scale(5),
     }}>
-       
-     
-     { url && <Image style={{
-        width:scale(58),
-        height:scale(58),
+          <Lightbox 
+                    springConfig={{ tension: 30, friction: 7 }}
+                    onOpen={()=>setLightBox(true)}
+                    willClose={()=>setLightBox(false)}
+                    >
+                       { url && <Image style={{
+        width:LightBox?"100%":scale(58),
+        height:LightBox?"100%":scale(58),
         borderRadius:scale(50),
 
       }}
       source={{uri:url}}
       
       ></Image>}
+                    </Lightbox>
+     
         <Text style={{
         color:"white",
         fontSize:scale(14)

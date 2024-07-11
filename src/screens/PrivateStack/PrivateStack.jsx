@@ -49,7 +49,7 @@ const PrivateStack = () => {
 
             <Tab.Screen
                 name="Search"
-                // initialParams={{ customFunction: () =>{}}}
+                initialParams={{ customFunction: () =>{}, url:"", title:""}}
                 component={Product}
                 options={{
                     tabBarIcon: ({ focused }) => (

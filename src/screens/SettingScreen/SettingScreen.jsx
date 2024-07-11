@@ -1,27 +1,118 @@
-import React, { useEffect, useState } from 'react';
-import { View, SafeAreaView, ImageBackground, ScrollView, Alert, Image } from 'react-native';
+import React, {  useState } from 'react';
+import { View, SafeAreaView, ImageBackground, ScrollView,Alert, Image,Linking } from 'react-native';
 import home from './../../../assets/images/home.png';
 import Header from '../../components/Header/Header';
 import CustomButtom from '../../components/CustomButtom/CustomButtom';
 import arrow from "./../../../assets/images/arrow.png";
-
 import { useNavigation } from '@react-navigation/native';
 import { scale } from 'react-native-size-matters';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { handleAuth } from '../../../android/app/Redux/userReducer';
-
+import CustomEditModal from '../../components/EditModal.jsx/EditModal';
+import Snackbar from 'react-native-snackbar';
+import CustomConfirmModal from '../../components/CustomConfirmModal/CustomConfirmModal';
+import useAxios from '../../../Axios/useAxios';
 const SettingScreen = () => {
+    const auth = useSelector(state=>state.auth)
     const navigation = useNavigation()
+    const [showModal, setShowModal] = useState(false)
+    const [showBlockModal, setShowBlockmodal] = useState(false)
+    const [showDeleteModal, setShowDeleteModal] = useState(false)
+    const [loading, setLoading] = useState(false)
+    const [isEnabled, setIsEnabled] = useState(true)
+    const [value, setValue] = useState({Name:auth?.name})
+    console.log(auth)
  const dispatch = useDispatch()
+ const axiosInstance = useAxios()
 
     const handleLogout=()=>{
-        dispatch(handleAuth({
-            user:null,
-            accessToken:null,
-            refreshToken:null,
-            authenticated:false
+        dispatch(  handleAuth({
+            "token": null,
+            "uid": null,
+            "name": null,
+            "email": null,
+            "provider": null,
+            "type": null,
+            "status": null,
+            "_id": null,
+            "url":null,
+            "authenticated": false,
           }))
     }
+
+
+    const handleChangeName = async () => {
+        try{
+            setLoading(true)
+            setIsEnabled(false)
+            // await new Promise(resolve => setTimeout(resolve, 2000));
+         await axiosInstance.patch("/change-name", { newName:value?.Name  })
+           dispatch( handleAuth({
+            "name": value?.Name,
+          }))
+          setShowModal(false)
+          console.log("alert showing")
+    
+          console.log("alert showing")
+        }catch{
+            console.log(error)
+            Alert.alert(error.message || error.toString())
+        }
+
+        finally{
+            setLoading(false)
+            setIsEnabled(true)
+          setShowModal(false)
+
+        }
+        // Snackbar.show({
+        //     text: 'Name.',
+        //     duration: Snackbar.LENGTH_SHORT,
+        //   });
+      };
+
+
+
+      
+    const handleBlock = async () => {
+        try{
+            setLoading(true)
+            setIsEnabled(false)
+            await new Promise(resolve => setTimeout(resolve, 2000));
+          setShowBlockmodal(false)
+        }catch{
+            console.log(error)
+            Alert.alert(error.message || error.toString())
+        }
+
+        finally{
+            setLoading(false)
+            setIsEnabled(true)
+          setShowBlockmodal(false)
+
+        }
+      };
+
+           
+    const handleDelete = async () => {
+        try{
+            setLoading(true)
+            setIsEnabled(false)
+            await new Promise(resolve => setTimeout(resolve, 2000));
+          setShowDeleteModal(false)
+        }catch{
+            console.log(error)
+            Alert.alert(error.message || error.toString())
+        }
+
+        finally{
+            setLoading(false)
+            setIsEnabled(true)
+          setShowDeleteModal(false)
+
+        }
+      };
+
     return (
         <ImageBackground style={{ flex: 1, width: '100%', height: '100%' }} source={home}>
             <SafeAreaView style={{ flex: 1 }}>
@@ -39,7 +130,7 @@ const SettingScreen = () => {
                                 showIcon={true}
                                 buttonTextStyle={{ fontSize: scale(14) }}
                                 buttonstyle={{ width: "100%", borderColor: "#FFA100", backgroundColor: "#2e210a", padding: 15, display: "flex", gap: 10, flexDirection: "row-reverse", alignItems: "center", justifyContent: "space-between" }}
-                                onPress={() => Alert.alert("Edit Profile")}
+                                onPress={() => setShowModal(true)}
                                 title={"Edit Profile"}
                             />
                             <CustomButtom
@@ -47,7 +138,7 @@ const SettingScreen = () => {
                                 showIcon={true}
                                 buttonTextStyle={{ fontSize: scale(14) }}
                                 buttonstyle={{ width: "100%", borderColor: "#FFA100", backgroundColor: "#2e210a", padding: 15, display: "flex", gap: 10, flexDirection: "row-reverse", alignItems: "center", justifyContent: "space-between" }}
-                                onPress={() => Alert.alert("Blocked ")}
+                                onPress={() => setShowBlockmodal(true)}
                                 title={"Blocked "}
                             />
 
@@ -56,7 +147,7 @@ const SettingScreen = () => {
                                 showIcon={true}
                                 buttonTextStyle={{ fontSize: scale(14) }}
                                 buttonstyle={{ width: "100%", borderColor: "#FFA100", backgroundColor: "#2e210a", padding: 15, display: "flex", gap: 10, flexDirection: "row-reverse", alignItems: "center", justifyContent: "space-between" }}
-                                onPress={() => Alert.alert("Help & Support")}
+                                onPress={() => Linking.openURL("https://help.unsplash.com/en/")}
                                 title={"Help & Support"}
                             />
 
@@ -66,7 +157,7 @@ const SettingScreen = () => {
                                 showIcon={true}
                                 buttonTextStyle={{ fontSize: scale(14) }}
                                 buttonstyle={{ width: "100%", borderColor: "#FFA100", backgroundColor: "#2e210a", padding: 15, display: "flex", gap: 10, flexDirection: "row-reverse", alignItems: "center", justifyContent: "space-between" }}
-                                onPress={() => Alert.alert("Privacy Policy")}
+                                onPress={() => Linking.openURL("https://unsplash.com/license")}
                                 title={"Privacy Policy"}
                             />
 
@@ -75,7 +166,7 @@ const SettingScreen = () => {
                                 showIcon={true}
                                 buttonTextStyle={{ fontSize: scale(14) }}
                                 buttonstyle={{ width: "100%", borderColor: "#FFA100", backgroundColor: "#2e210a", padding: 15, display: "flex", gap: 10, flexDirection: "row-reverse", alignItems: "center", justifyContent: "space-between" }}
-                                onPress={() => Alert.alert("Delete Account")}
+                                onPress={() => setShowDeleteModal(true)}
                                 title={"Delete Account"}
                             />
 
@@ -90,8 +181,32 @@ const SettingScreen = () => {
 
                         </View>
                     </View>
+                <CustomEditModal
+                isEnabled={isEnabled}
+                loading={loading}
+                initialValue={"hasnain"}
+                placeholder={"Change your name..."}
+                title={"Name"}
+                modalVisible={showModal} setModalVisible={setShowModal}
+                cb={handleChangeName}
+                setValue={setValue}
+                value={value?.Name}
+                />
+                 <CustomConfirmModal
+                isEnabled={isEnabled}
+                loading={loading}
+                title={"Block Account?"}
+                modalVisible={showBlockModal} setModalVisible={setShowBlockmodal}
+                cb={handleBlock}
+                />
+                  <CustomConfirmModal
+                isEnabled={isEnabled}
+                loading={loading}
+                title={"Delete Account?"}
+                modalVisible={showDeleteModal} setModalVisible={setShowDeleteModal}
+                cb={handleDelete}
+                />
                 </ScrollView>
-
             </SafeAreaView>
         </ImageBackground>
     );

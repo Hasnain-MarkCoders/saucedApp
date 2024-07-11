@@ -1,5 +1,5 @@
 import { ActivityIndicator, StyleSheet, Text, View } from 'react-native'
-import React from 'react'
+import React, { useEffect } from 'react'
 import { FlatList } from 'react-native-gesture-handler';
 import UserCard from '../UserCard/UserCard';
 import { scale } from 'react-native-size-matters';
@@ -11,11 +11,16 @@ const FollowersList = ({
     loading=false,
     numColumns=2
 }) => {
+  useEffect(()=>{
+console.log(loading)
+  },[loading])
   return (
     
    <View style={{
     gap:scale(20),
+    flex:1
 }}>
+  
     <FlatList
     showsHorizontalScrollIndicator={false} 
     showsVerticalScrollIndicator={false}

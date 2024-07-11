@@ -11,7 +11,10 @@ import SauceList from '../../components/SauceList/SauceList.jsx';
 import { topRatedSauces } from '../../../utils.js';
 import ProductsBulletsList from '../../components/ProductsBulletsList/ProductsBulletsList.jsx';
 import ProductCard from '../../components/ProductCard/ProductCard.jsx';
+import { useRoute } from "@react-navigation/native"
 const Product = () => {
+  const route = useRoute()
+  const {url="", title=""} = route?.params
   const [data, setData] = useState([])
   const [page, setPage] = useState(1)
   const [hasMore, setHasMore] = useState(true)
@@ -85,7 +88,7 @@ const Product = () => {
                   index == 0 && <View style={{
                     marginBottom:scale(20)
                   }}>
-                    <ProductCard />
+                    <ProductCard  url={url} title={title}/>
                   </View>
                 }
 

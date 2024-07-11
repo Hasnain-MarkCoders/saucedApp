@@ -13,6 +13,7 @@ import brand3 from "./assets/images/brand3.png";
 import brand4 from "./assets/images/brand4.png";
 import brand5 from "./assets/images/brand5.png";
 import brand6 from "./assets/images/brand6.png";
+const myurl = "https://images.unsplash.com/photo-1720357632208-63f783022899?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w2MTg0NjV8MHwxfGFsbHwzfHx8fHx8Mnx8MTcyMDYxMzQ4NXw&ixlib=rb-4.0.3&q=80&w=400"
 export const welcomeLists = [
     "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
     "Maecenas id metus efficitur, sollicitudin mauris in, pellentesque risus.",
@@ -32,38 +33,38 @@ export const handleText = (value,name, updaterFn) => {
 
   export const featuredSauces = [
     {
-      url: sauce1,
+      url: myurl,
       title: "Red Chilli Sauce"
     },
     {
-      url: sauce2,
+      url: myurl,
       title: "Green Chilli Sauce"
     },
     {
-      url: sauce3,
+      url: myurl,
       title: "Soy Sauce"
     },
     {
-      url: sauce4,
+      url: myurl,
       title: "Garlic Sauce"
     }
   ];
   
   export const topRatedSauces = [
     {
-      url: sauce5,
+      url: myurl,
       title: "Barbecue Sauce"
     },
     {
-      url: sauce6,
+      url: myurl,
       title: "Habanero Sauce"
     },
     {
-      url: sauce7,
+      url: myurl,
       title: "Tomato Ketchup"
     },
     {
-      url: sauce8,
+      url: myurl,
       title: "Mustard Sauce"
     }
   ];

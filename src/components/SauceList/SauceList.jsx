@@ -1,22 +1,66 @@
-import React from 'react';
-import { View, Text, FlatList, StyleSheet } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { View, Text, FlatList, StyleSheet, ActivityIndicator } from 'react-native';
 import { scale, verticalScale, moderateScale } from 'react-native-size-matters';
-
+import { UNSPLASH_URL, VITE_UNSPLASH_ACCESSKEY } from "@env"
 import SingleSauce from '../SingleSauce/SingleSauce';
+import axios from 'axios';
 
-const SauceList = ({ data = [], title = "" }) => {
+const SauceList = ({  title = "" }) => {
+    const [data, setData] = useState([])
+    const [page, setPage] = useState(1)
+    const [hasMore, setHasMore] = useState(true)
+    const [loading, setLoading] = useState(false);
+
+
+    useEffect(() => {
+        const fetchPhotos = async () => {
+            if (!hasMore || loading) return;
+
+            setLoading(true);
+            try {
+                const res = await axios.get(`${UNSPLASH_URL}/photos`, {
+                    params: {
+                        client_id: VITE_UNSPLASH_ACCESSKEY,
+                        page: page
+                    }
+                });
+                console.log("page", page)
+                if (res.data.length === 0) {
+                    setHasMore(false);
+                } else {
+                    setData(prevData => [...prevData, ...res.data]);
+                }
+            } catch (error) {
+                console.error('Failed to fetch photos:', error);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchPhotos();
+    }, [page]);
     return (
         <View style={styles.container}>
             <Text style={styles.title}>{title}</Text>
             <FlatList
-              showsVerticalScrollIndicator={false}
-              showsHorizontalScrollIndicator={false}
+                showsVerticalScrollIndicator={false}
+                showsHorizontalScrollIndicator={false}
                 horizontal
                 data={data}
+                onEndReachedThreshold={0.5}
+                onEndReached={() => {
+                    if (!loading && hasMore) {
+                        setPage(currentPage => currentPage + 1);
+                    }
+                }}
                 keyExtractor={(item, index) => index.toString()}
-                renderItem={({ item }) => <SingleSauce url={item.url} title={item.title} />}
+                renderItem={({ item }) => <SingleSauce url={item?.urls?.small} title={item.title} />}
                 ItemSeparatorComponent={() => <View style={styles.separator} />}
             />
+             {
+
+loading &&   <ActivityIndicator size="small" style={{marginBottom:scale(20)}} color="#FFA100" />
+}
         </View>
     );
 };

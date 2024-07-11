@@ -1,21 +1,25 @@
+import { useNavigation } from '@react-navigation/native';
 import React from 'react';
-import { Image, StyleSheet, Text, View } from 'react-native';
+import { Image, StyleSheet, Text, View, TouchableOpacity } from 'react-native';
 import { scale, verticalScale, moderateScale } from 'react-native-size-matters';
 
 const SingleSauce = ({
     url = "",
-    title
+    title=""
 }) => {
+const navigation = useNavigation()
     return (
-        <View style={styles.container}>
+        <TouchableOpacity
+        onPress={()=>{navigation.navigate("ProductDetail", {url, title})}}
+        style={styles.container}>
             <Image
-                source={url}
+              source={{uri:url}}
                 style={styles.image}
             />
             <Text style={styles.text}>
               {title}
             </Text>
-        </View>
+        </TouchableOpacity>
     );
 };
 
@@ -27,12 +31,14 @@ const styles = StyleSheet.create({
         height: verticalScale(160),
         width: scale(110),
         position:"relative",
-
+        borderRadius:scale(10),
     },
     image: {
         width: "100%",
         height: "100%",
-        objectFit:"contain"
+        objectFit:"cover",
+        borderRadius:scale(10)
+
     },
     text:{
       position:"absolute",

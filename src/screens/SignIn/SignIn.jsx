@@ -63,15 +63,15 @@ const [loading, setLoading] = useState(false)
         if (myuser) {
           dispatch(
             handleAuth({
-              "token": myuser?.token,
-              "uid": myuser?.token,
-              "name": myuser?.name,
-              "email": myuser?.email,
-              "provider": myuser?.provider,
-              "type": myuser?.type,
-              "status": myuser?.status,
-              "_id": myuser?._id,
-              "url":myuser?.image,
+              "token": myuser?.data?.user?.token,
+              "uid": myuser?.data?.user?.token,
+              "name": myuser?.data?.user?.name,
+              "email": myuser?.data?.user?.email,
+              "provider": myuser?.data?.user?.provider,
+              "type": myuser?.data?.user?.type,
+              "status": myuser?.data?.user?.status,
+              "_id": myuser?.data?.user?._id,
+              "url":myuser?.data?.user?.image,
               "authenticated": true,
             }))
         }

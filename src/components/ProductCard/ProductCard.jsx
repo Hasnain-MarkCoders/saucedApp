@@ -1,17 +1,22 @@
-import { Image, Text, TouchableOpacity, View } from 'react-native'
-import React from 'react'
+import { Image, Text, TouchableOpacity, View, Linking  } from 'react-native'
+import React, { useState } from 'react'
 import { scale } from 'react-native-size-matters'
 import { useSelector } from 'react-redux'
 import heart from "./../../../assets/images/heart.png"
 import { Rating, AirbnbRating } from 'react-native-ratings';
+import Lightbox from 'react-native-lightbox';
 
 import star from "./../../../assets/images/star.png"
 import TapRating from 'react-native-ratings/dist/TapRating'
 import CustomRating from '../CustomRating/CustomRating'
-const ProductCard = () => {
+const ProductCard = ({
+    url="",
+    title=""
+}) => {
+    const [LightBox, setLightBox] = useState(false)
     const auth = useSelector(state => state.auth)
     console.log("auth", auth)
-    const url = auth?.url || ""
+    // const url = auth?.url || ""
     return (
         <View style={{
             width: "100%",
@@ -25,16 +30,31 @@ const ProductCard = () => {
                 justifyContent: "flex-start",
                 gap: scale(10)
             }}>
-                <Image
-                    style={{
-                        width: scale(120),
-                        height: scale(100),
-                        borderRadius: scale(10),
-                        borderColor: "#FFA100",
-                        borderWidth: scale(1)
-                    }}
-                    source={{ uri: url }}
-                />
+
+                    <Lightbox 
+                    activeProps={{resizeMode:LightBox? 'contain':"cover"}}
+                    springConfig={{ tension: 30, friction: 7 }}
+                    onOpen={()=>setLightBox(true)}
+                    willClose={()=>setLightBox(false)}
+                    >
+                    <Image
+                                        style={{
+                                            width:LightBox?"100%": scale(120),
+                                            height: LightBox?"100%":scale(100),
+                                            minWidth:scale(120),
+                                            minHeight: scale(100),
+                                            borderRadius:LightBox?0: scale(10),
+                                            borderColor: LightBox?0:"#FFA100",
+                                            borderWidth:LightBox?0: scale(1)
+                                        }}
+                                        source={{ uri: url }}
+                                    />
+                    </Lightbox>
+                    
+
+
+
+               
                 <View style={{
                     gap: scale(14),
                     flexDirection: "row",
@@ -50,13 +70,17 @@ const ProductCard = () => {
                                 fontWeight: 600,
                                 fontSize: scale(20),
                                 lineHeight: scale(24),
-                            }}>Hot Sauce</Text>
+                            }}>{title}</Text>
+                            <TouchableOpacity onPress={()=>{
+                                Linking.openURL(url)
+                            }}>
                             <Text style={{
                                 color: "#FFA100",
                                 fontWeight: 600,
                                 fontSize: scale(12),
                                 lineHeight: scale(25),
                             }}>Website Link</Text>
+                            </TouchableOpacity>
                         </View>
                         <View>
                             <Text style={{
