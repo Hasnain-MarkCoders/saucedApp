@@ -14,6 +14,8 @@ import auth from '@react-native-firebase/auth';
 import { useDispatch } from 'react-redux';
 import { handleAuth } from '../../../android/app/Redux/userReducer';
 import useAxios from '../../../Axios/useAxios';
+import GoogleSignInBTN from '../../components/GoogleSignInBTN/GoogleSignInBTN';
+import FacebookSignInBTN from '../../components/FacebookSignInBTN/FacebookSignInBTN';
 
 // Get screen dimensions
 const { width } = Dimensions.get('window');
@@ -70,7 +72,6 @@ const SignUp = () => {
 
         // API call for additional authentication or user setup
         const myuser = await axiosInstance.post("/auth/firebase-authentication", { accessToken: token , name:data?.fullName});
-        console.log("Authenticated user details:", myuser.data);
         if (myuser) {
           dispatch(
             handleAuth({
@@ -84,6 +85,7 @@ const SignUp = () => {
               "_id": myuser?.data?.user?._id,
               "url":myuser?.data?.user?.image,
               "authenticated": true,
+              "welcome":myuser?.data?.user?.welcome
             }))
         }
      
@@ -161,9 +163,9 @@ const SignUp = () => {
                 justifyContent: "center",
                 alignItems: "center"
               }}>
-                <IconButton onPress={() => console.log("hello from Google Sign up")} url={google} />
+                 <GoogleSignInBTN onPress={() => console.log("hello from Google Sign Up")} url={google} />
                 <IconButton onPress={() => console.log("hello from Apple Sign Up")} url={apple} />
-                <IconButton onPress={() => console.log("hello from Fb Sign up")} url={fb} />
+                <FacebookSignInBTN onPress={() => console.log("hello from Facebook Sign Up")} url={fb} />
               </View>
               <View style={{ flexDirection: "row" }}>
                 <Text style={{ color: "white", fontSize: responsiveFontSize(1.6), lineHeight: 18 }}>Already Have an account? </Text>

@@ -73,6 +73,7 @@ const [loading, setLoading] = useState(false)
               "_id": myuser?.data?.user?._id,
               "url":myuser?.data?.user?.image,
               "authenticated": true,
+              "welcome":myuser?.data?.user?.welcome
             }))
         }
         // Optional: Update state or handle user authentication details

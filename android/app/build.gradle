@@ -89,10 +89,10 @@ android {
     }
     signingConfigs {
         debug {
-            storeFile file('debug.keystore')
-            storePassword 'android'
-            keyAlias 'androiddebugkey'
-            keyPassword 'android'
+            storeFile file('debug1.keystore')
+            storePassword 'android1'
+            keyAlias 'android1'
+            keyPassword 'android1'
         }
          release {
             storeFile file(SAUCED_RELEASE_STORE_FILE)

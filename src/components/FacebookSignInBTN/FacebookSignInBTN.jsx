@@ -9,6 +9,8 @@ import { LoginManager, AccessToken } from 'react-native-fbsdk-next';
 import google from "./../../../assets/images/google-icon.png"
 import { handleAuth } from '../../../android/app/Redux/userReducer';
 import { useDispatch } from 'react-redux';
+import auth from '@react-native-firebase/auth';
+import useAxios from '../../../Axios/useAxios';
 
 const FacebookSignInBTN = ({
     onPress = () => {},
@@ -17,6 +19,8 @@ const FacebookSignInBTN = ({
     url=google
 }) => {
     const dispatch = useDispatch()
+  const axiosInstance = useAxios()
+
     // const [user, setUser] = useState(null);
     
     // useEffect(() => {
@@ -90,23 +94,38 @@ const FacebookSignInBTN = ({
           
             // Sign-in the user with the credential
             const userCredential = await auth().signInWithCredential(facebookCredential);
-             
-            const userInfo = userCredential.user;
-            const email = userInfo.email;
-
-            console.log('User Email --> ', email);
-
-            Alert.alert("Success", `User signed in successfully! Email: ${email}`);
-
-            dispatch(handleAuth({
-                user: userInfo,
-                authenticated: true
-            }));
-
-            
-        }catch(error){
-            console.log(error)
-        }
+            const firebaseIdToken = await userCredential.user.getIdToken();
+            const myuser = await axiosInstance.post("/auth/firebase-authentication", { accessToken: firebaseIdToken });
+            if (myuser) {
+              dispatch(
+                handleAuth({
+                  "token": myuser?.data?.user?.token,
+                  "uid": myuser?.data?.user?.token,
+                  "name": myuser?.data?.user?.name,
+                  "email": myuser?.data?.user?.email,
+                  "provider": myuser?.data?.user?.provider,
+                  "type": myuser?.data?.user?.type,
+                  "status": myuser?.data?.user?.status,
+                  "_id": myuser?.data?.user?._id,
+                  "url":myuser?.data?.user?.image,
+                  "authenticated": true,
+                  "welcome":myuser?.data?.user?.welcome
+                }))
+            }
+          } catch (error) {
+       // Handle specific errors
+       if (error.code === 'auth/email-already-in-use') {
+         Alert.alert('That email address is already in use!');
+       } else if (error.code === 'auth/invalid-email') {
+         Alert.alert('That email address is invalid!');
+       } else {
+         console.error(error);
+         Alert.alert('An error occurred during login');
+       }
+     } finally {
+       setIsEnabled(true); // Re-enable button or other elements
+       setLoading(false)
+     }
        
       }
     
