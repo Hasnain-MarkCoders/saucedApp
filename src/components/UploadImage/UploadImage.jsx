@@ -4,29 +4,40 @@ import { scale } from 'react-native-size-matters';
 import { useDispatch, useSelector } from 'react-redux';
 import { launchImageLibrary } from 'react-native-image-picker';
 import { handleAuth } from '../../../android/app/Redux/userReducer';
-import useAxios from '../../../Axios/useAxios';
+import useAxios, { host } from '../../../Axios/useAxios';
 
 const UploadImage = () => {
-    const auth = useSelector(state => state.auth);
+    const auth = useSelector(state => state?.auth);
     const [imageUri, setImageUri] = useState(auth?.url);
-    const axiosInstance = useAxios()
-    
     const dispatch = useDispatch()
-    const handleImage = async(url, asset)=>{
-        const data = new FormData()
-        data.append("image", asset)
-        try {
-            const res = await axiosInstance.post("/change-image", data);
-            console.log(res);
-            dispatch(handleAuth({ url }));
-        } catch (error) {
-            console.error('Error uploading image:', error);
-            Alert.alert('Upload Error', 'Failed to upload image.');
-        }
-        dispatch(handleAuth({
-                url
-        }))
 
+    const handleImage = async (url, file) => {
+        const data = new FormData()
+        data.append('image', file);
+        var postData = {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'multipart/form-data',
+                'Authorization': 'Bearer ' + auth?.token
+            },
+            body: data,
+        }
+        return fetch(`${host}/change-image`, postData)
+            .then((response) => response.json())
+            .then((responseJson) => {
+                console.log('responseJson', responseJson);
+                     dispatch(handleAuth({
+                        url
+                    }))
+                if(responseJson.code > 200){
+                    Alert.alert(responseJson?.error)
+                }
+                return responseJson;
+            })
+            .catch((error) => {
+                console.log('error', error);
+                Alert.alert(error)
+            });
     }
 
     const handleImagePicker = () => {
@@ -51,9 +62,9 @@ const UploadImage = () => {
                     uri: response?.assets[0]?.uri,
                     type: response?.assets[0]?.type,
                     name: response?.assets[0]?.fileName,
+
                 }
-                handleImage(source.uri,file)
-                // Here you can also dispatch an action to update the user's profile picture in your backend
+                handleImage(source.uri, file)
             }
         });
     };

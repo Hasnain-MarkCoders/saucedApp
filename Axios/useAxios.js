@@ -2,6 +2,8 @@ import  axios from 'axios';
 import { useDispatch, useSelector } from "react-redux";
 import { handleAuth } from '../android/app/Redux/userReducer';
 import { useNavigation } from "@react-navigation/native";
+//export const host =  "http://localhost:5000"
+export const host =  "https://aws.markcoders.com/sauced-backend/api"
 
 const useAxios = () => {
   const auth = useSelector((state) => state?.auth);
@@ -9,8 +11,8 @@ const useAxios = () => {
   const navigation = useNavigation()
   const token = auth.token;
   const axiosInstance = axios.create({
-    // baseURL: "http://localhost:5000",
-    baseURL: "https://aws.markcoders.com/sauced-backend/api",
+    // baseURL: host,
+    baseURL:host,
     validateStatus: function (status) {
       return status >= 200 && status < 300; // default
     }
@@ -42,6 +44,7 @@ const useAxios = () => {
       
         
       }
+      
     }
   );
   return axiosInstance;
