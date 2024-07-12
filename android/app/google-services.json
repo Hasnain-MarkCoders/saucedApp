@@ -18,6 +18,14 @@
           "client_type": 1,
           "android_info": {
             "package_name": "com.app",
+            "certificate_hash": "adc49eb095a1a401514fc712d7d50c73671a6242"
+          }
+        },
+        {
+          "client_id": "406307069293-eginvued86u5acpnm7lbmiob43gpaaj2.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.app",
             "certificate_hash": "4da38b50ddd7468589ac87188c7191ee3e82127f"
           }
         },
