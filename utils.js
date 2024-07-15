@@ -113,3 +113,33 @@ export const handleText = (value,name, updaterFn) => {
   ];
   
   
+  export function generateThreeDigitRandomNumber() {
+    // Generate a random number between 100 and 999 inclusive
+    return Math.floor(Math.random() * 900) + 100;
+  }
+
+  export function getRandomDate() {
+    // Generate a random year between 2020 and 2025
+    const year = Math.floor(Math.random() * (2025 - 2020 + 1)) + 2020;
+  
+    // Generate a random month between 1 and 12
+    const month = Math.floor(Math.random() * 12) + 1;
+  
+    // Generate a random day based on the selected month (considering leap years for February)
+    let maxDays = 31; // Default to maximum days in a month (for most months)
+    if (month === 4 || month === 6 || month === 9 || month === 11) {
+      maxDays = 30; // April, June, September, November have 30 days
+    } else if (month === 2) {
+      // February, consider leap year (not included in this basic example)
+      maxDays = 28; // Assume non-leap year for simplicity
+    }
+  
+    const day = Math.floor(Math.random() * maxDays) + 1;
+  
+    // Format day, month, and year into "DD-MM-YYYY" format
+    const formattedDay = day.toString().padStart(2, '0'); // Ensure two digits with leading zero if necessary
+    const formattedMonth = month.toString().padStart(2, '0'); // Ensure two digits with leading zero if necessary
+    const formattedYear = year.toString();
+  
+    return `${formattedDay}-${formattedMonth}-${formattedYear}`;
+  }

@@ -1,14 +1,28 @@
-import { Alert, Image, StyleSheet, Text, View } from 'react-native'
+import { Alert, Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { scale } from 'react-native-size-matters'
 import CustomButtom from '../CustomButtom/CustomButtom'
 import Lightbox from 'react-native-lightbox';
+import { useNavigation } from '@react-navigation/native';
 
 const UserCard = ({url="", name="", title=""}) => {
   const [LightBox, setLightBox] = useState(false)
-
+const navigation = useNavigation()
   return (
-    <View style={{
+    <TouchableOpacity
+    onPress={()=>{
+      navigation.navigate("ExternalProfileScreen", {
+        url,
+        name
+      })
+    }}
+    >
+
+    <View
+    
+   
+    
+    style={{
         minWidth:scale(140),
         flexBasis:"47%",
         borderRadius:scale(10),
@@ -20,6 +34,8 @@ const UserCard = ({url="", name="", title=""}) => {
         paddingVertical:scale(15),
         paddingHorizontal:scale(15),
         margin:scale(5),
+        overflow: 'hidden',
+        maxWidth:scale(140)
     }}>
           <Lightbox 
                     springConfig={{ tension: 30, friction: 7 }}
@@ -37,7 +53,9 @@ const UserCard = ({url="", name="", title=""}) => {
       ></Image>}
                     </Lightbox>
      
-        <Text style={{
+        <Text
+         numberOfLines={1} ellipsizeMode="tail"
+        style={{
         color:"white",
         fontSize:scale(14)
 
@@ -48,6 +66,7 @@ const UserCard = ({url="", name="", title=""}) => {
               buttonstyle={{ width: "100%", borderColor: "#FFA100", padding: 8, backgroundColor: "#2E210A" }}onPress={()=>Alert.alert(`${title} ${name}`)} title={title}/> 
 
     </View>
+    </TouchableOpacity>
   )
 }
 

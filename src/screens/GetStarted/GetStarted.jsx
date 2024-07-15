@@ -1,5 +1,5 @@
 import React from 'react';
-import { Image, SafeAreaView, StyleSheet, Text, View, ImageBackground } from 'react-native';
+import { Image, SafeAreaView, StyleSheet, Text, View, ImageBackground, Vibration } from 'react-native';
 import { scale, verticalScale, moderateScale } from 'react-native-size-matters';
 import getStartedbackground from './../../../assets/images/getStartedbackground.png';
 import CustomButtom from '../../components/CustomButtom/CustomButtom';
@@ -24,13 +24,13 @@ const GetStarted = () => {
           <CustomButtom
             buttonTextStyle={{ fontSize: moderateScale(16) }}  // example fontSize scaling
             buttonstyle={styles.buttonStyle}
-            onPress={() => handleNavigateSignUp()}
+            onPress={() =>{ handleNavigateSignUp();  Vibration.vibrate(10)}}
             title={"Get Started"}
           />
            <CustomButtom
             buttonTextStyle={{ fontSize: moderateScale(16) }}  // example fontSize scaling
             buttonstyle={styles.buttonStyle}
-            onPress={() => handleNavigateSignin()}
+            onPress={() => {handleNavigateSignin(); Vibration.vibrate(10)}}
             title={"Sign In"}
           />
         </View>

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Text, View, SafeAreaView, ImageBackground, TouchableOpacity, Dimensions, ScrollView, Alert, Image } from 'react-native';
+import { Text, View, SafeAreaView, ImageBackground, TouchableOpacity, Dimensions, ScrollView, Alert, Image, Vibration } from 'react-native';
 import home from './../../../assets/images/home.png';
 import Header from '../../components/Header/Header';
 import CustomInput from '../../components/CustomInput/CustomInput';
@@ -27,10 +27,10 @@ import { LoginManager, AccessToken } from 'react-native-fbsdk-next';
 const { width } = Dimensions.get('window');
 
 // Utility for responsive font size
-const responsiveFontSize = (f) => {
-  const tempHeight = (16 / 9) * width;
-  return Math.sqrt(Math.pow(tempHeight, 2) + Math.pow(width, 2)) * (f / 100);
-};
+// const scale = (f) => {
+//   const tempHeight = (16 / 9) * width;
+//   return Math.sqrt(Math.pow(tempHeight, 2) + Math.pow(width, 2)) * (f / 100);
+// };
 
 const SocialSignIn = () => {
 
@@ -60,13 +60,14 @@ const SocialSignIn = () => {
               hostedDomain: '', // specifies a hosted domain restriction
               loginHint: '', // specifies an email address or subdomain that will be pre-filled in the login hint field
               forceCodeForRefreshToken: true, // [Android] if you want to force code for refresh token
-              accountName: '', // [Android] specifies an account name on the device that should be used
+              accountName: '', // [Android] specifies an account name on the device that should be used,
+              
             });
     }, []);
 
     const signInWithGoogle = async () => {
          try{
-          await GoogleSignin.hasPlayServices()
+          await GoogleSignin.hasPlayServices({showPlayServicesUpdateDialog: true})
           const { idToken } = await GoogleSignin.signIn();
           const googleCredential = auth.GoogleAuthProvider.credential(idToken);
            const res =   await auth().signInWithCredential(googleCredential)
@@ -175,32 +176,32 @@ const SocialSignIn = () => {
         showsHorizontalScrollIndicator={false} 
         showsVerticalScrollIndicator={false}
         style={{ flex: 1 }}>
-          <Header cb={navigateToSignUp} title="Sign in" description="Sign in with your data that you entered during registration." />
-          <View style={{ paddingHorizontal: 20, flex: 1, justifyContent: "space-between", paddingVertical: 40, paddingBottom: 100, gap: responsiveFontSize(10) }}>
+          <Header cb={()=>{navigateToSignUp(); Vibration.vibrate(10)}} title="Sign in" description="Sign in with your data that you entered during registration." />
+          <View style={{ paddingHorizontal: 20, flex: 1, justifyContent: "space-between", paddingVertical: 40, paddingBottom: 100, gap: scale(10) }}>
 
             <View style={{ alignItems: "center", gap: 20 }}>
             <CustomButtom
                 Icon={()=><Image style={{width:28, height:20}} source={envelope} />}
                 showIcon={true}
-                buttonTextStyle={{ fontSize: responsiveFontSize(2) }}
+                buttonTextStyle={{ fontSize: scale(14) }}
                 buttonstyle={{ width: "100%", borderColor: "#FFA100", padding: 15, backgroundColor: "#2E210A",  display:"flex", gap:10, flexDirection:"row", alignItems:"center", justifyContent:"center"}}
-                onPress={()=>navigation.navigate("SignIn")}
+                onPress={()=>{navigation.navigate("SignIn"); Vibration.vibrate(10)}}
                 title={"Sign In With Email"}
               />
               <CustomButtom
                 showIcon={true}
                 Icon={()=><Image style={{width:24, height:24}}  source={google} />}
-                buttonTextStyle={{ fontSize: responsiveFontSize(2) }}
+                buttonTextStyle={{ fontSize: scale(14) }}
                 buttonstyle={{ width: "100%", borderColor: "#FFA100", padding: 15, backgroundColor: "#2E210A",justifyContent:"start",  display:"flex", gap:10, flexDirection:"row", alignItems:"center", justifyContent:"center" }}
-                onPress={()=>signInWithGoogle()}
+                onPress={()=>{signInWithGoogle(); Vibration.vibrate(10)}}
                 title={"Sign In With Google"}
               />
               <CustomButtom
                 showIcon={true}
                 Icon={()=><Image style={{width:24, height:24}}  source={fb} />}
-                buttonTextStyle={{ fontSize: responsiveFontSize(2) }}
+                buttonTextStyle={{ fontSize: scale(14) }}
                 buttonstyle={{ width: "100%", borderColor: "#FFA100", padding: 15, backgroundColor: "#2E210A" ,justifyContent:"start",  display:"flex", gap:10, flexDirection:"row", alignItems:"center", justifyContent:"center"}}
-                onPress={()=>onFacebookButtonPress()}
+                onPress={()=>{onFacebookButtonPress();  Vibration.vibrate(10)}}
                 title={"Sign In With Facebook"}
               />
             <Text style={{
@@ -213,9 +214,9 @@ const SocialSignIn = () => {
               OR
             </Text>
             <CustomButtom
-                buttonTextStyle={{ fontSize: responsiveFontSize(2) }}
+                buttonTextStyle={{ fontSize: scale(14) }}
                 buttonstyle={{ width: "100%", borderColor: "#FFA100", padding: 15, backgroundColor: "#2E210A" ,justifyContent:"start",  display:"flex", gap:10, flexDirection:"row", alignItems:"center", justifyContent:"center"}}
-                onPress={()=>navigation.navigate("SignUp")}
+                onPress={()=>{navigation.navigate("SignUp");  Vibration.vibrate(10)}}
                 title={"Sign Up"}
               />
           

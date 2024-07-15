@@ -1,5 +1,5 @@
 import { ImageBackground, SafeAreaView, Text, View, Keyboard } from 'react-native'
-import React, { useEffect, useState } from 'react'
+import React, { memo, useEffect, useState } from 'react'
 import Header from '../../components/Header/Header.jsx'
 import getStartedbackground from './../../../assets/images/getStartedbackground.png';
 import { moderateScale, scale, verticalScale } from 'react-native-size-matters';
@@ -12,6 +12,8 @@ import { topRatedSauces } from '../../../utils.js';
 import ProductsBulletsList from '../../components/ProductsBulletsList/ProductsBulletsList.jsx';
 import ProductCard from '../../components/ProductCard/ProductCard.jsx';
 import { useRoute } from "@react-navigation/native"
+import CustomSelectListModal from '../../components/CustomSelectListModal/CustomSelectListModal.jsx';
+import Snackbar from 'react-native-snackbar';
 const Product = () => {
   const route = useRoute()
   const {url="", title=""} = route?.params
@@ -19,8 +21,13 @@ const Product = () => {
   const [page, setPage] = useState(1)
   const [hasMore, setHasMore] = useState(true)
   const [loading, setLoading] = useState(false);
-  const [isKeyBoard, setIsKeyBoard] = useState(false)
+  const [loading1, setLoading1] = useState(false);
+  const [loading2, setLoading2] = useState(false);
+  const [loading3, setLoading3] = useState(false);
 
+  const [isKeyBoard, setIsKeyBoard] = useState(false)
+  const [modalVisible, setModalVisible] = useState(false)
+  const [isEnabled, setisEnabled] = useState(true)
   const navigation = useNavigation()
   useEffect(() => {
     const showSubscription = Keyboard.addListener("keyboardDidShow", () => {
@@ -64,10 +71,51 @@ const Product = () => {
     };
     fetchPhotos();
   }, [page]);
+const handleLoading=(listNumber,action)=>{
+  if(listNumber==1){
+   return setLoading1(action)
+  }
+  if(listNumber==2){
+    return setLoading2(action)
+  }
+  if(listNumber==3){
+    return setLoading3(action)
+  }
+
+}
+addToList=(listNumber)=>{
+  console.log(listNumber)
+  handleLoading(listNumber, true)
+  Snackbar.show({
+    text:  `sauce adding in List ${listNumber}`,
+    duration: Snackbar.LENGTH_SHORT,
+    action: {
+      text: 'UNDO',
+      textColor: 'green',
+      onPress: () => {
+          Snackbar.show({
+            text:  `sauce remove from List ${listNumber}`,
+            duration: Snackbar.LENGTH_SHORT,
+          });
+       },
+    },
+  });
+  setTimeout(()=>{
+    handleLoading(listNumber, false)
+    setModalVisible(false)
+    setisEnabled(true)
+  },2000)
+
+
+}
+
   return (
     <ImageBackground style={{ flex: 1, width: '100%', height: '100%' }} source={getStartedbackground}>
-      <SafeAreaView style={{ flex: 1, paddingBottom: isKeyBoard ? 0 : verticalScale(75) }}>
-        <Header cb={() => navigation.navigate("Home")} showProfilePic={false} headerContainerStyle={{
+      <SafeAreaView style={{ flex: 1, paddingBottom: isKeyBoard ? 0 : verticalScale(0) }}>
+        <Header 
+        
+        showMenu={false}
+        cb={() => navigation.navigate("Home")} showProfilePic={false} headerContainerStyle={{
           paddingBottom: scale(20)
         }} title={"Followers"} showText={false} />
 
@@ -88,7 +136,9 @@ const Product = () => {
                   index == 0 && <View style={{
                     marginBottom:scale(20)
                   }}>
-                    <ProductCard  url={url} title={title}/>
+                    <ProductCard 
+                    setshowListModal= {setModalVisible}
+                    url={url} title={title}/>
                   </View>
                 }
 
@@ -111,19 +161,64 @@ const Product = () => {
 
                     <ProductsBulletsList />
 
+
+                    <Text style={{
+                      color: "white",
+                      lineHeight: verticalScale(29),
+                      fontSize: moderateScale(24),
+                      fontWeight: "600",
+                    }}>
+                      Chili peppers used
+
+                    </Text>
+
+                    <ProductsBulletsList textStyles={{
+                      fontWeight:700
+                    }} />
+
+
+                    
+                    <Text style={{
+                      color: "white",
+                      lineHeight: verticalScale(29),
+                      fontSize: moderateScale(24),
+                      fontWeight: "600",
+                    }}>
+                      Ingredients
+
+                    </Text>
+
+                    <ProductsBulletsList textStyles={{
+                      fontWeight:700
+                    }} />
+
+<Text style={{
+                      color: "white",
+                      lineHeight: verticalScale(29),
+                      fontSize: moderateScale(24),
+                      fontWeight: "600",
+                    }}>
+                      Food Pairing
+
+                    </Text>
+
+                    <ProductsBulletsList textStyles={{
+                      fontWeight:700
+                    }} />
+
                   </View>
                 }
                 {
                   index == 2 && <View style={{
-                    marginTop: scale(20)
+                    marginTop: scale(20),
+                    marginBottom:scale(20)
                   }}>
                     <View style={{
                       gap: scale(30)
                     }}>
 
-                      <SauceList title='Chili peppers used' data={topRatedSauces} />
-                      <SauceList title='Ingredients' data={topRatedSauces} />
                       <SauceList title='Shared Images' data={topRatedSauces} />
+                     
                     </View>
 
 
@@ -135,9 +230,22 @@ const Product = () => {
             )
           }}
         />
+        <CustomSelectListModal 
+        modalVisible={modalVisible}
+        setModalVisible={()=>{setModalVisible(false)}} 
+        cb={addToList} 
+        isEnabled={isEnabled} 
+        loading1={loading1}
+        loading2={loading2}
+        loading3={loading3}
+        title1="List 1"
+        title2="List 2"
+        title3="List 3"
+
+        />
       </SafeAreaView>
     </ImageBackground>
   )
 }
 
-export default Product
+export default memo(Product)

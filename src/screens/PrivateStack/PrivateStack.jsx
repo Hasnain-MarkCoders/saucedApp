@@ -11,6 +11,7 @@ import QRScreen from '../QRScreen/QRScreen';
 import qrImage from "./../../../assets/images/qr_transparent.png"
 import search from "./../../../assets/images/search.png"
 import { scale } from 'react-native-size-matters';
+import SearchScreen from '../SearchScreen/SearchScreen';
 const Tab = createBottomTabNavigator();
 
 const PrivateStack = () => {
@@ -50,7 +51,7 @@ const PrivateStack = () => {
             <Tab.Screen
                 name="Search"
                 initialParams={{ customFunction: () =>{}, url:"", title:""}}
-                component={Product}
+                component={SearchScreen}
                 options={{
                     tabBarIcon: ({ focused }) => (
                         <View style={{ gap: 8, alignItems: "center" }}>

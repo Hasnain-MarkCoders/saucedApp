@@ -22,6 +22,7 @@ const CustomButtom = ({
         borderRadius:10,
         ...buttonstyle ,
 
+
       }}>
      { loading? <ActivityIndicator size="small" color="white" />: <>
         {

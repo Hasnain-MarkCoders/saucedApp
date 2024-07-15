@@ -2,7 +2,8 @@ import {  Text, View, Image } from 'react-native'
 import React from 'react'
 import dot from "./../../../assets/images/dot.png"
 import { scale } from 'react-native-size-matters'
-const ProductBulletPoint = ({text}) => {
+const ProductBulletPoint = ({text, textStyles}) => {
+  console.log(textStyles)
   return (
     <View
     style={{
@@ -24,7 +25,8 @@ const ProductBulletPoint = ({text}) => {
       fontFamily:"Montserrat",
       fontSize:scale(12),
       fontWeight:600,
-      lineHeight:18
+      lineHeight:18,
+      ...textStyles
     }}>
      {text}
     </Text>

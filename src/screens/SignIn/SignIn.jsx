@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Text, View, SafeAreaView, ImageBackground, TouchableOpacity, Dimensions, ScrollView, Alert } from 'react-native';
+import { Text, View, SafeAreaView, ImageBackground, TouchableOpacity, Dimensions, ScrollView, Alert, Pressable, Vibration, Image } from 'react-native';
 import home from './../../../assets/images/home.png';
 import Header from '../../components/Header/Header';
 import CustomInput from '../../components/CustomInput/CustomInput';
@@ -16,6 +16,9 @@ import auth from '@react-native-firebase/auth';
 import FacebookSignInBTN from '../../components/FacebookSignInBTN/FacebookSignInBTN';
 import GoogleSignInBTN from '../../components/GoogleSignInBTN/GoogleSignInBTN';
 import useAxios from '../../../Axios/useAxios';
+import { scale } from 'react-native-size-matters';
+import { GoogleSignin } from '@react-native-google-signin/google-signin';
+import { AccessToken, LoginManager } from 'react-native-fbsdk-next';
 // Get screen dimensions
 const { width } = Dimensions.get('window');
 
@@ -28,17 +31,16 @@ const responsiveFontSize = (f) => {
 const SignIn = () => {
   const dispatch = useDispatch()
   const [isEnabled, setIsEnabled] = useState(true);
-const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(false)
   const axiosInstance = useAxios()
   const navigation = useNavigation()
   const [data, setData] = useState({
     email: "",
     password: ""
   });
-  handleLogin = async () => {
+  const handleLogin = async () => {
     try {
-      setIsEnabled(false); // Disable login button or other elements
-      setLoading(true)
+   
       // Input validation
       if (!data.email) {
         Alert.alert("Email is required!");
@@ -48,7 +50,8 @@ const [loading, setLoading] = useState(false)
         Alert.alert("Password is required!");
         return;
       }
-
+      setIsEnabled(false); // Disable login button or other elements
+      setLoading(true)
       // Firebase authentication
       const userCredential = await auth().signInWithEmailAndPassword(data.email, data.password);
       const user = userCredential.user;
@@ -71,9 +74,9 @@ const [loading, setLoading] = useState(false)
               "type": myuser?.data?.user?.type,
               "status": myuser?.data?.user?.status,
               "_id": myuser?.data?.user?._id,
-              "url":myuser?.data?.user?.image,
+              "url": myuser?.data?.user?.image,
               "authenticated": true,
-              "welcome":myuser?.data?.user?.welcome
+              "welcome": myuser?.data?.user?.welcome
             }))
         }
         // Optional: Update state or handle user authentication details
@@ -97,70 +100,216 @@ const [loading, setLoading] = useState(false)
     }
   }
 
-  useEffect(() => {
-    console.log(data)
-  }, [data])
+
+  async function onFacebookButtonPress() {
+    // Attempt login with permissions
+    try{
+        const result = await LoginManager.logInWithPermissions(['public_profile', 'email']);
+  
+        if (result.isCancelled) {
+          throw 'User cancelled the login process';
+        }
+      
+        // Once signed in, get the users AccessToken
+        const data = await AccessToken.getCurrentAccessToken();
+      
+        if (!data) {
+          throw 'Something went wrong obtaining access token';
+        }
+      
+        // Create a Firebase credential with the AccessToken
+        const facebookCredential = auth.FacebookAuthProvider.credential(data.accessToken);
+      
+        // Sign-in the user with the credential
+        const userCredential = await auth().signInWithCredential(facebookCredential);
+        const firebaseIdToken = await userCredential.user.getIdToken();
+        const myuser = await axiosInstance.post("/auth/firebase-authentication", { accessToken: firebaseIdToken });
+        if (myuser) {
+          dispatch(
+            handleAuth({
+              "token": myuser?.data?.user?.token,
+              "uid": myuser?.data?.user?.token,
+              "name": myuser?.data?.user?.name,
+              "email": myuser?.data?.user?.email,
+              "provider": myuser?.data?.user?.provider,
+              "type": myuser?.data?.user?.type,
+              "status": myuser?.data?.user?.status,
+              "_id": myuser?.data?.user?._id,
+              "url":myuser?.data?.user?.image,
+              "authenticated": true,
+              "welcome":myuser?.data?.user?.welcome
+            }))
+        }
+      } catch (error) {
+   // Handle specific errors
+   if (error.code === 'auth/email-already-in-use') {
+     Alert.alert('That email address is already in use!');
+   } else if (error.code === 'auth/invalid-email') {
+     Alert.alert('That email address is invalid!');
+   } else {
+     console.error(error);
+     Alert.alert('An error occurred during login');
+   }
+ } finally {
+   setIsEnabled(true); // Re-enable button or other elements
+   setLoading(false)
+ }
+   
+  }
+
+
+  const signInWithGoogle = async () => {
+    try{
+     await GoogleSignin.hasPlayServices({showPlayServicesUpdateDialog: true})
+     const { idToken } = await GoogleSignin.signIn();
+     const googleCredential = auth.GoogleAuthProvider.credential(idToken);
+      const res =   await auth().signInWithCredential(googleCredential)
+      const firebaseToken = await res.user.getIdToken();
+      console.log(firebaseToken)
+      const myuser = await axiosInstance.post("/auth/firebase-authentication", { accessToken: firebaseToken });
+      if (myuser) {
+        dispatch(
+          handleAuth({
+            "token": myuser?.data?.user?.token,
+            "uid": myuser?.data?.user?.token,
+            "name": myuser?.data?.user?.name,
+            "email": myuser?.data?.user?.email,
+            "provider": myuser?.data?.user?.provider,
+            "type": myuser?.data?.user?.type,
+            "status": myuser?.data?.user?.status,
+            "_id": myuser?.data?.user?._id,
+            "url":myuser?.data?.user?.image,
+            "authenticated": true,
+            "welcome":myuser?.data?.user?.welcome
+          }))
+      }
+    } catch (error) {
+ // Handle specific errors
+ if (error.code === 'auth/email-already-in-use') {
+   Alert.alert('That email address is already in use!');
+ } else if (error.code === 'auth/invalid-email') {
+   Alert.alert('That email address is invalid!');
+ } else {
+   console.error(error);
+   Alert.alert('An error occurred during login');
+ }
+} finally {
+ setIsEnabled(true); // Re-enable button or other elements
+ setLoading(false)
+}
+
+ };
+
   const navigateToSignUp = () => {
     navigation.navigate('SignUp')
     // console.log("hello from hasnain")
   }
+
+
+  useEffect(() => {
+    GoogleSignin.configure({
+     scopes: ['https://www.googleapis.com/auth/userinfo.email', 'https://www.googleapis.com/auth/userinfo.profile'], // what API you want to access on behalf of the user, default is email and profile
+     webClientId: '406307069293-kgffko9vq29heap8t2pmvrih1qbea6bi.apps.googleusercontent.com', // client ID of type WEB for your server (needed to verify user ID and offline access)
+     offlineAccess: true, // if you want to access Google API on behalf of the user FROM YOUR SERVER
+     hostedDomain: '', // specifies a hosted domain restriction
+     loginHint: '', // specifies an email address or subdomain that will be pre-filled in the login hint field
+     forceCodeForRefreshToken: true, // [Android] if you want to force code for refresh token
+     accountName: '', // [Android] specifies an account name on the device that should be used,
+     
+   });
+}, []);
+
   return (
     <ImageBackground style={{ flex: 1, width: '100%', height: '100%' }} source={home}>
-      <SafeAreaView style={{ flex: 1 }}>
-        <ScrollView
-          showsHorizontalScrollIndicator={false}
-          showsVerticalScrollIndicator={false}
-          style={{ flex: 1 }}>
-          <Header cb={navigateToSignUp} title="Sign in" description="Sign in with your data that you entered during registration." />
-          <View style={{ paddingHorizontal: 20, flex: 1, justifyContent: "space-between", paddingVertical: 40, paddingBottom: 100, gap: responsiveFontSize(10) }}>
-            <View style={{
-              gap: 20
-            }}>
-              <CustomInput
-                onChange={handleText}
-                updaterFn={setData}
-                value={data.email}
-                title="Email"
-                name="email"
-              />
-              <CustomInput
-                onChange={handleText}
-                updaterFn={setData}
-                value={data.password}
-                title="Password"
-                name="password"
-                secureTextEntry={true}
-              />
-            </View>
-            <View style={{ alignItems: "center", gap: 20 }}>
-              <CustomButtom
-              loading={loading}
-                buttonTextStyle={{ fontSize: responsiveFontSize(2) }}
-                buttonstyle={{ width: "100%", borderColor: "#FFA100", padding: 15, backgroundColor: "#2E210A" }}
-                onPress={isEnabled ? handleLogin : null}
-                title={"Sign In"}
-              />
-              <View style={{
-                flexDirection: "row",
-                justifyContent: "center",
-                alignItems: "center"
-              }}>
-                <GoogleSignInBTN onPress={() => console.log("hello from Google login")} url={google} />
-                <IconButton onPress={() => console.log("hello from Apple login")} url={apple} />
-                <FacebookSignInBTN onPress={() => console.log("hello from Facebook login")} url={fb} />
-              </View>
-              <View style={{ flexDirection: "row" }}>
-                <Text style={{ color: "white", fontSize: responsiveFontSize(1.6), lineHeight: 18 }}>Don't have an account? </Text>
-                <TouchableOpacity onPress={() => navigateToSignUp()} style={{ verticalAlign: "middle" }}>
-                  <Text style={{ color: "#FFA100", fontSize: responsiveFontSize(1.6), lineHeight: 18 }}>Register</Text>
-                </TouchableOpacity>
-              </View>
-            </View>
-          </View>
-        </ScrollView>
+    <SafeAreaView style={{ flex: 1 }}>
+    <ScrollView
+      showsHorizontalScrollIndicator={false}
+      showsVerticalScrollIndicator={false}
+      contentContainerStyle={{ flexGrow: 1 }}
+      >
+     <Header cb={()=>{navigateToSignUp();  Vibration.vibrate(10)}} title="Sign in" description="Sign in with your data that you entered during registration." /> 
+    <View style={{  gap:scale(40),paddingHorizontal:scale(20), paddingVertical:scale(30)}}>
+      <View style={{
+        gap: 20, flex:1,
+      }}>
+        <CustomInput
+          onChange={handleText}
+          updaterFn={setData}
+          value={data.email}
+          title="Email"
+          name="email"
+        />
+        <CustomInput
+          onChange={handleText}
+          updaterFn={setData}
+          value={data.password}
+          title="Password"
+          name="password"
+          secureTextEntry={true}
+        />
+      </View>
+      <View style={{ alignItems: "center", gap: 20 }}>
+        <CustomButtom
+        loading={loading}
+          buttonTextStyle={{ fontSize:  scale(14) }}
+          buttonstyle={{ width: "100%", borderColor: "#FFA100", padding: 15, backgroundColor: "#2E210A" }}
+          onPress={()=>isEnabled ? (handleLogin(),  Vibration.vibrate(10)) : null}
+          title={"Sign In"}
+        />
+        {/* <View style={{
+          flexDirection: "row",
+          justifyContent: "center",
+          alignItems: "center"
+        }}>
+          <GoogleSignInBTN onPress={() => console.log("hello from Google login")} url={google} />
+          <IconButton onPress={() => console.log("hello from Apple login")} url={apple} />
+          <FacebookSignInBTN onPress={() => console.log("hello from Facebook login")} url={fb} />
+        </View> */}
 
-      </SafeAreaView>
+<Text style={{
+              color:"#FFA100",
+              fontSize:scale(25),
+              lineHeight:scale(30),
+              fontWeight:500,
+              marginVertical:scale(15)
+            }}>
+              OR
+            </Text>
+            <View style={{
+             width:"100%",
+             gap:scale(20)
+            }}>
+
+<CustomButtom
+                showIcon={true}
+                Icon={()=><Image style={{width:24, height:24}}  source={google} />}
+                buttonTextStyle={{ fontSize: scale(14) }}
+                buttonstyle={{ width: "100%", borderColor: "#FFA100", padding: 15, backgroundColor: "#2E210A",justifyContent:"start",  display:"flex", gap:10, flexDirection:"row", alignItems:"center", justifyContent:"center" }}
+                onPress={()=>{signInWithGoogle();  Vibration.vibrate(10)}}
+                title={"Sign In With Google"}
+              />
+            <CustomButtom
+                showIcon={true}
+                Icon={()=><Image style={{width:24, height:24}}  source={fb} />}
+                buttonTextStyle={{ fontSize: scale(14) }}
+                buttonstyle={{ width: "100%", borderColor: "#FFA100", padding: 15, backgroundColor: "#2E210A" ,justifyContent:"start",  display:"flex", gap:10, flexDirection:"row", alignItems:"center", justifyContent:"center"}}
+                onPress={()=>{onFacebookButtonPress();  Vibration.vibrate(10)}}
+                title={"Sign In With Facebook"}
+              />
+            </View>
+        <View style={{ flexDirection: "row"  ,marginTop:scale(20)}}>
+          <Text style={{ color: "white", fontSize: responsiveFontSize(1.6), lineHeight: 18 }}>Don't have an account? </Text>
+          <TouchableOpacity  onPress={() => {navigateToSignUp(),  Vibration.vibrate(10)}} style={{ verticalAlign: "middle" }}>
+            <Text style={{ color: "#FFA100", fontSize: scale(14), lineHeight: 18,  marginTop:scale(3),paddingHorizontal:scale(3)}}>Register</Text>
+          </TouchableOpacity>
+        </View>
+      </View>
+    </View>
+    </ScrollView>
+
+    </SafeAreaView>
     </ImageBackground>
+
   );
 };
 

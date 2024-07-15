@@ -3,17 +3,23 @@ import { welcomeLists } from "../../../utils";
 import { scale } from "react-native-size-matters";
 import ProductBulletPoint from "../ProductBulletPoint/ProductBulletPoint";
 
-const renderItem = ({ item }) =>
-    (<ProductBulletPoint text={item} />)
+const renderItem = ({ item, textStyles }) =>
+    (<ProductBulletPoint text={item} textStyles={textStyles} />)
   ;
-const ProductsBulletsList = () => {
+const ProductsBulletsList = ({
+  data=[],
+  textStyles={},
+  bulletStyle={},
+
+
+}) => {
     return (
       <View style={{}}>
         <FlatList
           showsHorizontalScrollIndicator={false} 
           showsVerticalScrollIndicator={false}
           data={welcomeLists}
-          renderItem={renderItem}
+          renderItem={(props)=>renderItem({...props, textStyles, bulletStyle})}
           keyExtractor={(item, index) => index.toString()}
           ItemSeparatorComponent={() => <View style={styles.separator} />}
         />

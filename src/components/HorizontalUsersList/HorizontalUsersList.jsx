@@ -9,6 +9,7 @@ const HorizontalUsersList = ({
     setPage=()=>{},
     loading=false,
 }) => {
+  console.log(data)
   return (
     <View style={{
         gap:scale(20),
@@ -27,7 +28,7 @@ const HorizontalUsersList = ({
             }
           }}
            keyExtractor={(item, index) => index.toString()}
-           renderItem={({ item }) => <UserCard url={item?.urls?.small} title={"Follow"} name={"Hasnain"} showText={false} />}
+           renderItem={({ item }) => <UserCard url={item?.urls?.small} title={"Follow"} name={item.user.username} showText={false} />}
     
        />{
 

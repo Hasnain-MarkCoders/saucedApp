@@ -1,20 +1,25 @@
-import React from 'react'
+import React, { useState } from 'react'
 import TapRating from 'react-native-ratings/dist/TapRating'
 
 const CustomRating = ({
-    size = 10,
-    defaultRating = 5,
+    size = 9,
     showRating = false,
-    ratingContainerStyle = {}
+    ratingContainerStyle = {},
+    cb=()=>{},
+    isDisabled=false
 }) => {
+    const [rating, setRating] = useState(5);
     const ratingCompleted = (rating) => {
         console.log(rating)
+        setRating(rating)
+        cb(rating)
     }
     return (
         <TapRating
+        isDisbled={isDisabled}
             onFinishRating={ratingCompleted}
             size={size}
-            defaultRating={defaultRating}
+            defaultRating={rating}
             showRating={showRating}
             ratingContainerStyle={
                 {

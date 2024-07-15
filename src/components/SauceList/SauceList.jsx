@@ -5,7 +5,7 @@ import { UNSPLASH_URL, VITE_UNSPLASH_ACCESSKEY } from "@env"
 import SingleSauce from '../SingleSauce/SingleSauce';
 import axios from 'axios';
 
-const SauceList = ({  title = "" }) => {
+const SauceList = ({  title = "" , name=""}) => {
     const [data, setData] = useState([])
     const [page, setPage] = useState(1)
     const [hasMore, setHasMore] = useState(true)
@@ -39,9 +39,21 @@ const SauceList = ({  title = "" }) => {
 
         fetchPhotos();
     }, [page]);
+    
     return (
         <View style={styles.container}>
-            <Text style={styles.title}>{title}</Text>
+            <View style={{
+                flexDirection:"row", gap:scale(10)
+            }}>
+            <Text
+            numberOfLines={1}
+            ellipsizeMode="tail"
+            style={[styles.title, {maxWidth:scale(100)}]}>{name}</Text>
+               <Text
+            
+            style={[styles.title]}>{title}</Text>
+            </View>
+         
             <FlatList
                 showsVerticalScrollIndicator={false}
                 showsHorizontalScrollIndicator={false}
@@ -54,7 +66,7 @@ const SauceList = ({  title = "" }) => {
                     }
                 }}
                 keyExtractor={(item, index) => index.toString()}
-                renderItem={({ item }) => <SingleSauce url={item?.urls?.small} title={item.title} />}
+                renderItem={({ item }) => <SingleSauce url={item?.urls?.small} title={item.user.username} />}
                 ItemSeparatorComponent={() => <View style={styles.separator} />}
             />
              {

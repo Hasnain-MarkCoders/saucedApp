@@ -54,7 +54,7 @@ const FollowingScreen = () => {
                     }
                 });
 
-                setData(prev=>[...prev, ...res?.data?.results]);
+                setData(prev=>[...res?.data?.results,...prev ]);
 
             } catch (error) {
                 console.error('Failed to fetch photos:', error);
@@ -85,7 +85,7 @@ const FollowingScreen = () => {
                 if (res.data.length === 0) {
                     setHasMore(false);
                 } else {
-                    setData(prevData => [...prevData, ...res?.data]);
+                    setData(prevData => [ ...res?.data,...prevData,]);
                 }
             } catch (error) {
                 console.error('Failed to fetch photos:', error);

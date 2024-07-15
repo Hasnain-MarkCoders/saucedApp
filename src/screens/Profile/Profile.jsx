@@ -57,7 +57,7 @@ const ProfileScreen = () => {
                     }
                 });
 
-                setData(prev=>[...prev, ...res.data.results]);
+                setData(prev=>[ ...res.data.results,...prev]);
 
             } catch (error) {
                 console.error('Failed to fetch photos:', error);
@@ -87,7 +87,7 @@ const ProfileScreen = () => {
                 if (res.data.length === 0) {
                     setHasMore(false);
                 } else {
-                    setData(prevData => [...prevData, ...res.data]);
+                    setData(prevData => [...res.data,...prevData]);
                 }
             } catch (error) {
                 console.error('Failed to fetch photos:', error);
@@ -101,9 +101,9 @@ const ProfileScreen = () => {
         <ImageBackground style={{ flex: 1, width: '100%', height: '100%' }} source={home}>
             <SafeAreaView style={{ flex: 1, paddingBottom:isKeyBoard ? 0 : verticalScale(75) }}>
 
-                <Header cb={() => navigation.navigate("Home")} showProfilePic={false} headerContainerStyle={{
+                <Header cb={() => navigation.goBack()} showProfilePic={false} headerContainerStyle={{
                     paddingBottom: scale(20)
-                }} title={"Followers"} showText={false} />
+                }} showText={false} />
 
                 <FlatList
   showsHorizontalScrollIndicator={false} 

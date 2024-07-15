@@ -11,6 +11,11 @@ import Product from './src/screens/Product/Product';
 import EditModal from './src/components/EditModal.jsx/EditModal';
 import SettingScreen from './src/screens/SettingScreen/SettingScreen';
 import Home from './src/screens/Home/Home';
+import CheckinScreen from './src/screens/CheckinScreen/CheckinScreen';
+import SouceDetails from './src/screens/SouceDetails/SouceDetails';
+import ExternalProfileScreen from './src/screens/ExternalProfileScreen/ExternalProfileScreen';
+import AllHotSaucesReviews from './src/screens/AllHotSaucesReviews/AllHotSaucesReviews';
+import AddReview from './src/screens/AddReview/AddReview';
 const Stack = createNativeStackNavigator();
 function AppRouter() {
   const auth = useSelector(state => state.auth)
@@ -22,10 +27,18 @@ function AppRouter() {
         <Stack.Navigator screenOptions={{ headerShown: false }}>{
 
           authenticated ? <>
-                            <Stack.Screen name="Drawer" component={DrawerStack}/>
-                            <Stack.Screen name="ProductDetail" component={Product}/>
-          
-                        </>
+
+            <Stack.Screen name="Drawer" component={DrawerStack} />
+            <Stack.Screen name="AddReview" component={AddReview} />
+            <Stack.Screen name="ExternalProfileScreen" component={ExternalProfileScreen} />
+            <Stack.Screen name="SauceDetails" component={SouceDetails} />
+
+
+            <Stack.Screen name="Checkin" component={CheckinScreen} />
+            <Stack.Screen name="ProductDetail" component={Product} />
+
+
+          </>
             :
             <Stack.Screen name="Public" component={PublicStack} />}
         </Stack.Navigator>

@@ -1,4 +1,4 @@
-import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { Image, StyleSheet, Text, TouchableOpacity, Vibration, View } from 'react-native'
 import React from 'react'
 import back from "./../../../assets/images/back.png"
 import { useSelector } from 'react-redux'
@@ -13,7 +13,8 @@ const Header = ({
   showDescription=true,
   cb = () => { },
   headerContainerStyle={},
-  showProfilePic=true
+  showProfilePic=true,
+  showMenu=true
 }) => {
   const navigation = useNavigation()
 let url = ""
@@ -35,7 +36,7 @@ let url = ""
     }}>
       <View style={{
       }}>
-        <TouchableOpacity onPress={cb} >
+        <TouchableOpacity onPress={()=>(cb(), Vibration.vibrate(10))} >
           <Image style={{
             display: "flex"
           }} source={back} />
@@ -50,7 +51,7 @@ let url = ""
           borderRadius: scale(50)
         }}
         source={{ uri: url }}
-      />:authenticated?<TouchableOpacity onPress={() => navigation.dispatch(DrawerActions.openDrawer())}>
+      />:(authenticated && showMenu)?<TouchableOpacity onPress={() => (navigation.dispatch(DrawerActions.openDrawer(), Vibration.vibrate(10)))}>
         <Image source={menu}/>
       </TouchableOpacity>:null
 }

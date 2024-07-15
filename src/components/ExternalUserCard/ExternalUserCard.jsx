@@ -4,11 +4,14 @@ import { scale } from 'react-native-size-matters'
 import { useSelector } from 'react-redux'
 import { generateThreeDigitRandomNumber, getRandomDate } from '../../../utils'
 
-const ProfileCard = () => {
+const ExternalUserCard = ({
+    url="",
+    name=""
+}) => {
     const auth = useSelector(state => state.auth)
     console.log("auth", auth)
-    const url = auth?.url || ""
-    const name =  auth?.user?.user?.displayName || auth?.name
+    // const url = auth?.url || ""
+    // const name =  auth?.user?.user?.displayName || auth?.name
     console.log( )
     const circles = [1,1,1,1,1]
     return (
@@ -40,11 +43,15 @@ const ProfileCard = () => {
                     gap:scale(14)
                 }}>
 
-                    <Text style={{
+                    <Text 
+         numberOfLines={1} ellipsizeMode="tail"
+                    
+                    style={{
                         color: "white",
                         fontWeight: 600,
                         fontSize: scale(20),
                         lineHeight: scale(24),
+                        maxWidth:scale(100)
                     }}>{name}</Text>
                     <View>
                         <View style={{
@@ -81,7 +88,7 @@ const ProfileCard = () => {
                         fontWeight: 600,
                         fontSize: scale(10),
                         lineHeight: scale(25),
-                    }}>Followers</Text>
+                    }}>Following</Text>
                             </View>
 
                             <View>
@@ -96,7 +103,7 @@ const ProfileCard = () => {
                         fontWeight: 600,
                         fontSize: scale(10),
                         lineHeight: scale(25),
-                    }}>Followers</Text>
+                    }}>Check-ins</Text>
                             </View>
 
                         </View>
@@ -153,6 +160,6 @@ const ProfileCard = () => {
     )
 }
 
-export default ProfileCard
+export default ExternalUserCard
 
 const styles = StyleSheet.create({})
