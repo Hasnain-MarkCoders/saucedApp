@@ -211,8 +211,8 @@ const CheckinScreen = () => {
         Vibration.vibrate(10)
         Alert.alert("response received")
         setTimeout(()=>{
-            navigation.goBack()
-        },3000)
+            navigation.navigate("AllCheckinsScreen")
+        },1000)
 
         const uploadPromises = imageUris.map(uri => {
             console.log(uri)
@@ -277,12 +277,6 @@ const CheckinScreen = () => {
                                     paddingLeft: scale(50)
 
                                 }} />
-
-
-
-
-
-
                             <SelectDropdown
                                 data={emojisWithIcons}
                                 onSelect={(selectedItem, index) => {

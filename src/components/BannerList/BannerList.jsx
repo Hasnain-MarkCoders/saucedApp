@@ -8,7 +8,9 @@ const BannerList = ({
     data = [],
     hasMore = true,
     setPage = () => {},
-    loading = false
+    loading = false,
+    showText= true,
+    
 }) => {
     const memoData = useMemo(() => data);
     const flatListRef = useRef(null);
@@ -24,7 +26,7 @@ const BannerList = ({
     return (
         <View style={{ gap: scale(20) }}>
             <View style={{
-                flexDirection: "row",
+                // flexDirection: "row",
                 gap: scale(10)
             }}>
                 <FlatList
@@ -45,11 +47,26 @@ const BannerList = ({
                         if (!loading && hasMore) setPage(currentPage => currentPage + 1);
                     }}
                     keyExtractor={(item, index) => index.toString()}
-                    renderItem={({ item }) => <Banner url={item?.urls?.small} infoText={""} showText={false} />}
+                    renderItem={({ item }) => <Banner showText={showText} title={item?.user?.username} url={item?.urls?.small} infoText={""}/>}
                 />
                 <View style={{
+                    flexDirection:"row",
+                    justifyContent:showText ? "space-between":"flex-end"
+                }}>
+               {showText&& <Text style={{
+                                marginTop: scale(4), fontWeight: 700,
+                                textDecorationLine: "underline",
+                                color: "white",
+                                fontSize: scale(10),
+                                lineHeight: scale(13),
+                                fontFamily: "Montserrat",
+                            }}>
+                                Don't see your event, suggest it to us
+                            </Text>}
+                <View style={{
+                    flexDirection:"row",
                     paddingVertical: scale(10),
-                    justifyContent: "center",
+                    justifyContent: "flex-start",
                     gap: scale(3)
                 }}>
                     {Array.from({ length: 8 }).map((_, index) => (  // Only create 8 dots
@@ -63,6 +80,7 @@ const BannerList = ({
                             }}
                         />
                     ))}
+                </View>
                 </View>
             </View>
             {loading && <ActivityIndicator size="small" style={{ marginBottom: scale(20) }} color="#FFA100" />}

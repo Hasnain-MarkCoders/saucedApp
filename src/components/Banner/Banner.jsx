@@ -2,108 +2,98 @@ import { Linking, ImageBackground, StyleSheet, Text, TouchableOpacity, View } fr
 import React, { useEffect } from 'react'
 import banner from "./../../../assets/images/banner.png";
 import { moderateScale, scale, verticalScale } from 'react-native-size-matters';
+import { useNavigation } from '@react-navigation/native';
 
 const Banner = ({
     url = "",
     infoText = "",
-    showText = true
+    showText = true,
+    title = "",
+    cb = () => { }
 }) => {
+    const navigation = useNavigation()
     return (
-        // <View style={styles.mainBanner}>
+        <TouchableOpacity onPress={() => { !showText && navigation.navigate("ProductDetail", { url, title }) }}>
 
-        //    { url && <View style={styles.bannerContainer}>
-        //      <Image source={{uri:url}} style={styles.bannerImage} />
-
-
-        //         <View style={styles.bannerTextContainer}>
-        //             <Text style={styles.bannerText}>Hot Sauce Event</Text>
-        //             <Text style={{
-        //                 fontSize:scale(10)
-        //             }}>Lorem ipsum dolor sit amet consectetur adipisicing elit. Nisi voluptatibus quas aliquid iusto praesentium aliquam voluptate cupiditate ipsum id maxime!</Text>
-
-        //         </View>
-
-        //     </View>}
-        //    {showText? <Text style={styles.infoText}>
-        //     {infoText}
-        //     </Text>:null}
-        // </View>
+            <ImageBackground
 
 
-        <ImageBackground style={{
-            width: "100%",
-            height: scale(130),
-        }}
-            imageStyle={{ borderRadius: 15 }}
-            source={{ uri: url }}>
-
-            <View style={{ paddingVertical: scale(5), paddingHorizontal: scale(20), gap:scale(5) }}>
-                <Text style={styles.bannerText}>Hot Sauce Event</Text>
-                <View style={{
-                    gap:scale(10)
-                }}>
-                <Text style={{
-                    color: "white",
-                    fontSize: scale(10),
-                    lineHeight: scale(13),
-                    fontFamily: "Montserrat",
-                    maxWidth: "80%"
-                }}>
-
-                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Blanditiis ad 
-
-                </Text>
-                <View style={{
-                    flexDirection:"row",
-                    gap:scale(10)
-                }}>
-
-                <TouchableOpacity
-                onPress={()=>{
-                    Linking.openURL(url)
-                }}
                 style={{
-                     paddingHorizontal:scale(10),
-                     paddingVertical:scale(6),
-                     backgroundColor:"white",
-                     borderRadius:scale(5),
-                     elevation:scale(5)
-                }}>
-                    <Text style={{
-                    color:"black",
-                    fontWeight:"700"
-
-                    }}>Details</Text>
-                    
-
-                </TouchableOpacity>
-                <TouchableOpacity
-                
-                onPress={()=>{
-                    Linking.openURL(url)
+                    width: "100%",
+                    height: scale(130),
                 }}
-                style={{
-                    paddingHorizontal:scale(10),
-                    paddingVertical:scale(6),
+                imageStyle={{ borderRadius: 15 }}
+                source={{ uri: url }}>
+                {
+                    showText && <View style={{ paddingVertical: scale(5), paddingHorizontal: scale(20), gap: scale(5) }}>
+                        <Text style={styles.bannerText}>Hot Sauce Event</Text>
+                        <View style={{
+                            gap: scale(10)
+                        }}>
+                            <Text style={{
+                                color: "white",
+                                fontSize: scale(10),
+                                lineHeight: scale(13),
+                                fontFamily: "Montserrat",
+                                maxWidth: "80%",
+                                fontWeight: '700'
+                            }}>
 
-                    backgroundColor:"white",
-                    borderRadius:scale(5),
-                }}>
-                    <Text style={{
-                    color:"black",
-                    fontWeight:"700"
+                                Lorem ipsum dolor sit amet consectetur adipisicing elit. Blanditiis ad
+
+                            </Text>
+                            <View style={{
+                                flexDirection: "row",
+                                gap: scale(10)
+                            }}>
+
+                                <TouchableOpacity
+                                    onPress={() => {
+                                        Linking.openURL(url)
+                                    }}
+                                    style={{
+                                        paddingHorizontal: scale(10),
+                                        paddingVertical: scale(6),
+                                        backgroundColor: "white",
+                                        borderRadius: scale(5),
+                                        elevation: scale(5)
+                                    }}>
+                                    <Text style={{
+                                        color: "black",
+                                        fontWeight: "700"
+
+                                    }}>Details</Text>
 
 
-                    }}>Interested</Text>
-                    
+                                </TouchableOpacity>
+                                <TouchableOpacity
 
-                </TouchableOpacity>
-                </View>
-                </View>
+                                    onPress={() => {
+                                        Linking.openURL(url)
+                                    }}
+                                    style={{
+                                        paddingHorizontal: scale(10),
+                                        paddingVertical: scale(6),
 
-            </View>
+                                        backgroundColor: "white",
+                                        borderRadius: scale(5),
+                                    }}>
+                                    <Text style={{
+                                        color: "black",
+                                        fontWeight: "700"
 
-        </ImageBackground>
+
+                                    }}>Interested</Text>
+
+
+                                </TouchableOpacity>
+                            </View>
+                        </View>
+
+                    </View>}
+
+            </ImageBackground>
+        </TouchableOpacity>
 
     )
 }
@@ -144,6 +134,8 @@ const styles = StyleSheet.create({
     bannerText: {
         color: "white",
         fontSize: scale(23),
-        fontWeight: 'bold',
+        fontWeight: '700',
+        // mixBlendMode:"differnce"
+
     }
 })

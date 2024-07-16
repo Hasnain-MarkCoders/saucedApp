@@ -179,10 +179,13 @@ const ProfileScreen = () => {
                                 }
                                 {
                                     index == 2 && <View style={{
-                                        marginTop: scale(50)
+                                        marginTop: scale(50),
+                                        gap:scale(40)
                                     }}>
 
                                         <SauceList title='My Favorites' data={topRatedSauces} />
+                                        <SauceList title='Checked in Sauces' data={topRatedSauces} />
+
                                     </View>
 
                                 }

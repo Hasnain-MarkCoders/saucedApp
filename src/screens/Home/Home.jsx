@@ -114,12 +114,6 @@ const Home = () => {
 
                             </View>
                             <BannerList loading={loading} hasMore={hasMore} setPage={setPage} data={banners} />
-                            <Text style={[styles.infoText, {
-                                marginTop: scale(4), fontWeight: 700,
-                                textDecorationLine: "underline"
-                            }]}>
-                                Don't see your event, suggest it to us
-                            </Text>
                             <View style={styles.contentContainer}>
 
                                 <SauceList title='Featured Sauces' data={featuredSauces} />
@@ -135,6 +129,7 @@ const Home = () => {
                                     title={"Hot Sauce Map"}
                                 />
                                 <BrandList title='Top Rated Brands' data={Brands} />
+                            <BannerList  loading={loading} showText={false} hasMore={hasMore} setPage={setPage} data={banners} />
 
                                 <CustomButtom
                                     Icon={() => <Image source={arrow} />}

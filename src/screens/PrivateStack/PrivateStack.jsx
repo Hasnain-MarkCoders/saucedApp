@@ -15,8 +15,18 @@ import SearchScreen from '../SearchScreen/SearchScreen';
 const Tab = createBottomTabNavigator();
 
 const PrivateStack = () => {
+    const logScreenNameOnFocus = ({ route }) => ({
+        focus: () => {
+            console.log("Selected Drawer Tab:", route.name);
+            Vibration.vibrate(10)
+        },
+    });
+
     return (
         <Tab.Navigator
+        tabBarOnPress={()=>{
+            console.log("hasnain")
+        }}
             screenOptions={{
                 tabBarShowLabel: false,
                 tabBarHideOnKeyboard: true,
@@ -35,7 +45,7 @@ const PrivateStack = () => {
             sceneContainerStyle={{ backgroundColor: 'transparent' }}
         >
             <Tab.Screen
-                name="Home"
+                 name="Home"
                 component={Home}
                 options={{
                     tabBarIcon: ({ focused }) => (

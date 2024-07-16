@@ -20,7 +20,7 @@ import filledHeart from "./../../../assets/images/filledHeart.png"
 import { useSelector } from 'react-redux';
 import Snackbar from 'react-native-snackbar';
 import CustomComment from '../../components/CustomComment/CustomComment.jsx';
-const AllHotSaucesReviews = ({
+const AllCheckinsScreen = ({
 }) => {
     const route = useRoute()
     const [commentStatus, setCommentStatus] = useState(false)
@@ -186,7 +186,7 @@ loading &&   <ActivityIndicator size="small" style={{marginBottom:scale(20)}} co
     )
 }
 
-export default AllHotSaucesReviews
+export default AllCheckinsScreen
 
 const styles = StyleSheet.create({
     separator: {
