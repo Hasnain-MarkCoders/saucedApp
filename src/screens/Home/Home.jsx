@@ -21,7 +21,7 @@ import { UNSPLASH_URL, VITE_UNSPLASH_ACCESSKEY } from "@env"
 import QRScreen from '../QRScreen/QRScreen';
 import { useNavigation } from '@react-navigation/native';
 const Home = () => {
-    const navigation =useNavigation()
+    const navigation = useNavigation()
     const [showQRCode, setShowQRCode] = useState(false)
     const [torch, setTorch] = useState(false)
     const [banners, setBanners] = useState([])
@@ -54,7 +54,7 @@ const Home = () => {
                 if (res.data.length === 0) {
                     setHasMore(false);
                 } else {
-                    setBanners( [ ...res.data]);
+                    setBanners([...res.data]);
                 }
             } catch (error) {
                 console.error('Failed to fetch photos:', error);
@@ -67,12 +67,7 @@ const Home = () => {
     }, [page]);
     return (
 
-        <>
-            {showQRCode ?
-            <QRScreen   navigation={navigation} showQRCode={showQRCode} closeQR={()=>{setShowQRCode(false)}}/>
-
-
-                : <ImageBackground source={home} style={styles.background}>
+       <ImageBackground source={home} style={styles.background}>
                     <ScrollView
                         showsVerticalScrollIndicator={false}
                         showsHorizontalScrollIndicator={false}
@@ -98,59 +93,66 @@ const Home = () => {
 
                                         }} />
 
-                                    <TouchableOpacity onPress={() => { setShowQRCode(true) }}>
+                                    <TouchableOpacity onPress={() => { navigation.navigate("QRScreen")}}>
                                         <View>
 
                                             <Image source={qr} style={styles.qrImage} />
                                         </View>
                                     </TouchableOpacity>
                                 </View>
-                                <TouchableOpacity onPress={()=>{
+                                <TouchableOpacity onPress={() => {
                                     Vibration.vibrate(10)
                                     navigation.navigate("SauceDetails")
                                 }}>
 
-                                <Text style={[styles.infoText, {textDecorationLine:"underline"}]}>
-                                    Don't see what you're looking for? Request a sauce or brand.
-                                </Text>
+                                    <Text style={[styles.infoText, {
+                                        textDecorationLine: "underline",fontWeight: 700,
+                                    }]}>
+                                        Don't see what you're looking for? Request a sauce or brand.
+                                    </Text>
                                 </TouchableOpacity>
 
                             </View>
                             <BannerList loading={loading} hasMore={hasMore} setPage={setPage} data={banners} />
-                            <Text style={[styles.infoText, {marginTop:scale(4), textDecorationLine:"underline"}]}>
-                            Don't see your event, suggest it to us
-                                </Text>
+                            <Text style={[styles.infoText, {
+                                marginTop: scale(4), fontWeight: 700,
+                                textDecorationLine: "underline"
+                            }]}>
+                                Don't see your event, suggest it to us
+                            </Text>
                             <View style={styles.contentContainer}>
 
                                 <SauceList title='Featured Sauces' data={featuredSauces} />
 
                                 <SauceList title='Top Rated Sauces' data={topRatedSauces} />
-                            
-                                   <CustomButtom
-                                Icon={() => <Image source={arrow} />}
-                                showIcon={true}
-                                buttonTextStyle={{ fontSize: scale(14) }}
-                                buttonstyle={{ width: "100%", borderColor: "#FFA100", backgroundColor: "#2e210a", padding: 15, display: "flex", gap: 10, flexDirection: "row-reverse", alignItems: "center", justifyContent: "space-between" }}
-                                onPress={() => Alert.alert("Hot Sauce Map")}
-                                title={"Hot Sauce Map"}
-                            />
-                                <BrandList title='Top Rated Brands' data={Brands} />
-                              
+
                                 <CustomButtom
-                                Icon={() => <Image source={arrow} />}
-                                showIcon={true}
-                                buttonTextStyle={{ fontSize: scale(14) }}
-                                buttonstyle={{ width: "100%", borderColor: "#FFA100", backgroundColor: "#2e210a", padding: 15, display: "flex", gap: 10, flexDirection: "row-reverse", alignItems: "center", justifyContent: "space-between" }}
-                                onPress={() => { Vibration.vibrate(10);
-                                    navigation.navigate("SauceDetails")}}
-                                title={"Want to List Sauce? "}
-                            />
+                                    Icon={() => <Image source={arrow} />}
+                                    showIcon={true}
+                                    buttonTextStyle={{ fontSize: scale(14) }}
+                                    buttonstyle={{ width: "100%", borderColor: "#FFA100", backgroundColor: "#2e210a", padding: 15, display: "flex", gap: 10, flexDirection: "row-reverse", alignItems: "center", justifyContent: "space-between" }}
+                                    onPress={() => Alert.alert("Hot Sauce Map")}
+                                    title={"Hot Sauce Map"}
+                                />
+                                <BrandList title='Top Rated Brands' data={Brands} />
+
+                                <CustomButtom
+                                    Icon={() => <Image source={arrow} />}
+                                    showIcon={true}
+                                    buttonTextStyle={{ fontSize: scale(14) }}
+                                    buttonstyle={{ width: "100%", borderColor: "#FFA100", backgroundColor: "#2e210a", padding: 15, display: "flex", gap: 10, flexDirection: "row-reverse", alignItems: "center", justifyContent: "space-between" }}
+                                    onPress={() => {
+                                        Vibration.vibrate(10);
+                                        navigation.navigate("SauceDetails")
+                                    }}
+                                    title={"Want to List Sauce? "}
+                                />
 
                             </View>
                         </SafeAreaView>
                     </ScrollView>
-                </ImageBackground>}
-        </>
+                </ImageBackground>
+    
     );
 };
 
@@ -212,7 +214,7 @@ const styles = StyleSheet.create({
     },
     contentContainer: {
         gap: verticalScale(40),
-        marginTop:scale(30)
+        marginTop: scale(30)
     },
     mainBanner: {
         position: "relative",

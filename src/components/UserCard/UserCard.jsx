@@ -37,15 +37,15 @@ const navigation = useNavigation()
         overflow: 'hidden',
         maxWidth:scale(140)
     }}>
-          <Lightbox 
-                    springConfig={{ tension: 30, friction: 7 }}
+          <Lightbox activeProps={{ resizeMode: LightBox ? 'contain' : "cover" }}
+                        springConfig={{ tension: 30, friction: 7 }}
                     onOpen={()=>setLightBox(true)}
                     willClose={()=>setLightBox(false)}
                     >
                        { url && <Image style={{
         width:LightBox?"100%":scale(58),
         height:LightBox?"100%":scale(58),
-        borderRadius:scale(50),
+        borderRadius:LightBox?0:scale(50),
 
       }}
       source={{uri:url}}

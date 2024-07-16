@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { launchImageLibrary } from 'react-native-image-picker';
 import { handleAuth } from '../../../android/app/Redux/userReducer';
 import useAxios, { host } from '../../../Axios/useAxios';
+import Snackbar from 'react-native-snackbar';
 
 const UploadImage = () => {
     const auth = useSelector(state => state?.auth);
@@ -29,6 +30,10 @@ const UploadImage = () => {
                      dispatch(handleAuth({
                         url
                     }))
+                    Snackbar.show({
+                        text: 'Picuture Uploaded Successfully.',
+                        duration: Snackbar.LENGTH_SHORT,
+                      });
                 if(responseJson.code > 200){
                     Alert.alert(responseJson?.error)
                 }

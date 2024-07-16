@@ -16,6 +16,8 @@ import SouceDetails from './src/screens/SouceDetails/SouceDetails';
 import ExternalProfileScreen from './src/screens/ExternalProfileScreen/ExternalProfileScreen';
 import AllHotSaucesReviews from './src/screens/AllHotSaucesReviews/AllHotSaucesReviews';
 import AddReview from './src/screens/AddReview/AddReview';
+import AllReviewsScreen from './src/screens/AllReviewsScreen/AllReviewsScreen';
+import QRScreen from './src/screens/QRScreen/QRScreen';
 const Stack = createNativeStackNavigator();
 function AppRouter() {
   const auth = useSelector(state => state.auth)
@@ -29,12 +31,14 @@ function AppRouter() {
           authenticated ? <>
 
             <Stack.Screen name="Drawer" component={DrawerStack} />
+            <Stack.Screen name="AllReviews" component={AllReviewsScreen} />
+            <Stack.Screen name="QRScreen" component={QRScreen} />
+            <Stack.Screen name="Checkin" component={CheckinScreen} />
             <Stack.Screen name="AddReview" component={AddReview} />
             <Stack.Screen name="ExternalProfileScreen" component={ExternalProfileScreen} />
             <Stack.Screen name="SauceDetails" component={SouceDetails} />
 
 
-            <Stack.Screen name="Checkin" component={CheckinScreen} />
             <Stack.Screen name="ProductDetail" component={Product} />
 
 

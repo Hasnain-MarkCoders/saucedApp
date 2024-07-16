@@ -81,11 +81,7 @@ const SearchScreen = () => {
         fetchPhotos();
     }, [query.search, page]);
     return (
-        <>
-        {
-  showQRCode ?
-    <QRScreen   navigation={navigation} showQRCode={showQRCode} closeQR={()=>{setShowQRCode(false)}}/>
-       : <ImageBackground
+   <ImageBackground
 
             source={home}
             style={{
@@ -120,7 +116,7 @@ const SearchScreen = () => {
 
                         }} />
 
-                    <TouchableOpacity onPress={() => { setShowQRCode(true) }}>
+                    <TouchableOpacity onPress={() => {navigation.navigate("QRScreen") }}>
                         <View>
 
                             <Image source={qr} style={{
@@ -139,7 +135,8 @@ const SearchScreen = () => {
                 <Text style={[{ color: "white",
         fontSize: scale(10),
         lineHeight: scale(13),
-        fontFamily: "Montserrat"}, { textDecorationLine: "underline" }]}>
+        fontFamily: "Montserrat"}, { textDecorationLine: "underline", fontWeight:700,
+        }]}>
                     Don't see what you're looking for? Request a sauce or brand.
                 </Text>
                 </TouchableOpacity>
@@ -153,8 +150,6 @@ const SearchScreen = () => {
 
             </View>
         </ImageBackground>
-        }
-        </>
     )
 }
 

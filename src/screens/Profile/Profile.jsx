@@ -18,7 +18,7 @@ const ProfileScreen = () => {
     const [page, setPage] = useState(1)
     const [hasMore, setHasMore] = useState(true)
     const [loading, setLoading] = useState(false);
-    const [isKeyBoard, setIsKeyBoard]= useState(false)
+    const [isKeyBoard, setIsKeyBoard] = useState(false)
     const [query, setQuery] = useState({
         search: "",
     });
@@ -26,20 +26,20 @@ const ProfileScreen = () => {
     useEffect(() => {
         const showSubscription = Keyboard.addListener("keyboardDidShow", () => {
             setIsKeyBoard(true)
-          console.log('Keyboard is open');
+            console.log('Keyboard is open');
         });
         const hideSubscription = Keyboard.addListener("keyboardDidHide", () => {
             setIsKeyBoard(false)
-          console.log('Keyboard is closed');
+            console.log('Keyboard is closed');
         });
-    
+
         // Cleanup function
         return () => {
-          showSubscription.remove();
-          hideSubscription.remove();
+            showSubscription.remove();
+            hideSubscription.remove();
         };
-      }, []);
-      useEffect(() => {
+    }, []);
+    useEffect(() => {
         const fetchPhotos = async () => {
             if (!query?.search?.trim()) {
                 return
@@ -57,7 +57,7 @@ const ProfileScreen = () => {
                     }
                 });
 
-                setData(prev=>[ ...res.data.results,...prev]);
+                setData(prev => [...res.data.results, ...prev]);
 
             } catch (error) {
                 console.error('Failed to fetch photos:', error);
@@ -87,7 +87,7 @@ const ProfileScreen = () => {
                 if (res.data.length === 0) {
                     setHasMore(false);
                 } else {
-                    setData(prevData => [...res.data,...prevData]);
+                    setData(prevData => [...res.data, ...prevData]);
                 }
             } catch (error) {
                 console.error('Failed to fetch photos:', error);
@@ -99,16 +99,16 @@ const ProfileScreen = () => {
     }, [page]);
     return (
         <ImageBackground style={{ flex: 1, width: '100%', height: '100%' }} source={home}>
-            <SafeAreaView style={{ flex: 1, paddingBottom:isKeyBoard ? 0 : verticalScale(75) }}>
+            <SafeAreaView style={{ flex: 1, paddingBottom: isKeyBoard ? 0 : verticalScale(75) }}>
 
                 <Header cb={() => navigation.goBack()} showProfilePic={false} headerContainerStyle={{
                     paddingBottom: scale(20)
                 }} showText={false} />
 
                 <FlatList
-  showsHorizontalScrollIndicator={false} 
-  showsVerticalScrollIndicator={false}
-                    data={[1, 1,1]}
+                    showsHorizontalScrollIndicator={false}
+                    showsVerticalScrollIndicator={false}
+                    data={[1, 1, 1,1]}
                     renderItem={({ item, index }) => {
                         return (
                             <View style={{
@@ -134,7 +134,7 @@ const ProfileScreen = () => {
                                             My Profile
 
                                         </Text>
-                                        <ProfileCard/>
+                                        <ProfileCard />
 
 
                                     </View>
@@ -142,27 +142,27 @@ const ProfileScreen = () => {
                                 {
                                     index == 1 && <View>
                                         <View style={{
-                                            marginBottom:scale(20)
+                                            marginBottom: scale(20)
                                         }}>
 
-                                         <CustomInput
-                                        cb={() => setPage(1)}
-                                        name="search"
-                                        onChange={handleText}
-                                        updaterFn={setQuery}
-                                        value={query.search}
-                                        showTitle={false}
-                                        placeholder="Search Followers..."
-                                        containterStyle={{
-                                            flexGrow: 1,
-                                        }}
-                                        inputStyle={{
-                                            borderColor: "#FFA100",
-                                            borderWidth: 1,
-                                            borderRadius: 10,
-                                            padding: 15,
+                                            <CustomInput
+                                                cb={() => setPage(1)}
+                                                name="search"
+                                                onChange={handleText}
+                                                updaterFn={setQuery}
+                                                value={query.search}
+                                                showTitle={false}
+                                                placeholder="Search Followers..."
+                                                containterStyle={{
+                                                    flexGrow: 1,
+                                                }}
+                                                inputStyle={{
+                                                    borderColor: "#FFA100",
+                                                    borderWidth: 1,
+                                                    borderRadius: 10,
+                                                    padding: 15,
 
-                                        }} />
+                                                }} />
                                         </View>
                                         <Text style={{
                                             color: "white",
@@ -172,18 +172,28 @@ const ProfileScreen = () => {
                                             marginBottom: scale(20)
 
                                         }}>
-                                        Add Friends
+                                            Add Friends
                                         </Text>
                                         <HorizontalUsersList horizontal={true} loading={loading} hasMore={hasMore} setPage={setPage} data={data} />
                                     </View>
                                 }
                                 {
-                               index==2 && <View style={{
-                                marginTop:scale(50)
-                               }}>
+                                    index == 2 && <View style={{
+                                        marginTop: scale(50)
+                                    }}>
 
-<SauceList title='My favorites' data={topRatedSauces} />
-                               </View>
+                                        <SauceList title='My Favorites' data={topRatedSauces} />
+                                    </View>
+
+                                }
+
+{
+                                    index == 3 && <View style={{
+                                        marginTop: scale(50)
+                                    }}>
+
+                                        <SauceList title='My List 1' data={topRatedSauces} />
+                                    </View>
 
                                 }
                             </View>

@@ -143,3 +143,14 @@ export const handleText = (value,name, updaterFn) => {
   
     return `${formattedDay}-${formattedMonth}-${formattedYear}`;
   }
+
+
+  export function generateRandomText(num=400) {
+    const words = ["lorem", "ipsum", "dolor", "sit", "amet", "consectetur", "adipiscing", "elit"];
+    const length = Math.floor(Math.random() * num);
+    let text = "";
+    while (text.length < length) {
+      text += words[Math.floor(Math.random() * words.length)] + " ";
+    }
+    return text.trim();
+  }

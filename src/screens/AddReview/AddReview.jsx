@@ -43,7 +43,7 @@ console.log(data)
                 <Header
                 showMenu={false}
                 
-                cb={() => navigation.navigate("Home")} showProfilePic={false} headerContainerStyle={{
+                cb={() => navigation.goBack()} showProfilePic={false} headerContainerStyle={{
                     paddingBottom: scale(20)
                 }} title={"Followers"} showText={false} />
                 <FlatList
@@ -76,7 +76,7 @@ console.log(data)
 
                                         <CustomInput
                                             multiline={true}
-                                            numberOfLines={10}
+                                            numberOfLines={5}
                                             name="review"
                                             onChange={handleText}
                                             updaterFn={setData}
@@ -111,13 +111,13 @@ console.log(data)
                                             <Text style={{ fontSize: scale(16), color:"white" }}>
                                                 Rating
                                             </Text>
-                                            <CustomRating cb={(e)=>{setData(prev=>({...prev, rating:e}))}} size={11}/>
+                                            <CustomRating cb={(e)=>{setData(prev=>({...prev, rating:e}))}} size={12}/>
                                         </TouchableOpacity>
                                         <CustomButtom
                                             showIcon={false}
                                             buttonTextStyle={{ fontSize: scale(14) }}
                                             buttonstyle={{ width: "100%", marginTop: scale(60), borderColor: "#FFA100", backgroundColor: "#2e210a", paddingHorizontal: scale(15), paddingVertical: scale(13), display: "flex", gap: 10, flexDirection: "row-reverse", alignItems: "center", justifyContent: "center" }}
-                                            onPress={() => { Vibration.vibrate(10); Alert.alert("Review submitted.", console.log(data)) }}
+                                            onPress={() => { Vibration.vibrate(10); Alert.alert("Review submitted."), navigation.navigate("AllReviews") }}
                                             title={"Submit"}
                                         />
                                     </View>

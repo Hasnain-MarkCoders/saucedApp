@@ -81,7 +81,7 @@ const ProfileCard = () => {
                         fontWeight: 600,
                         fontSize: scale(10),
                         lineHeight: scale(25),
-                    }}>Followers</Text>
+                    }}>Following</Text>
                             </View>
 
                             <View>
@@ -96,7 +96,7 @@ const ProfileCard = () => {
                         fontWeight: 600,
                         fontSize: scale(10),
                         lineHeight: scale(25),
-                    }}>Followers</Text>
+                    }}>Check-ins</Text>
                             </View>
 
                         </View>

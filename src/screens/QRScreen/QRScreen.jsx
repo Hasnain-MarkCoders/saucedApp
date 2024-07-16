@@ -6,12 +6,10 @@ import close from "./../../../assets/images/close.png";
 import flashon from "./../../../assets/images/flashon.png";
 import flashoff from "./../../../assets/images/flashoff.png";
 import { scale } from 'react-native-size-matters';
+import { useNavigation } from '@react-navigation/native';
 const QRScreen = ({
-    closeQR=()=>{},
-    showQRCode=true,
-    route, navigation 
 }) => {
-
+const navigation = useNavigation()
     const [torch, setTorch] = useState(false)
 
     onSuccess = e => {
@@ -21,7 +19,7 @@ const QRScreen = ({
     <SafeAreaView style={{
         flex:1
     }}>
-   {showQRCode? <View style={{
+    <View style={{
         position: "relative",
         width: "100%",
         height: "100%"
@@ -43,7 +41,6 @@ const QRScreen = ({
         />
         <TouchableOpacity
             onPress={() => navigation.goBack()}
-
             style={{
                 position: "absolute",
                 top: 10,
@@ -83,7 +80,7 @@ const QRScreen = ({
         </TouchableOpacity>
 
 
-    </View>:null}
+    </View>
     </SafeAreaView>
   )
 }

@@ -1,4 +1,4 @@
-import { ImageBackground, SafeAreaView, StyleSheet, ScrollView, Text, View, Keyboard, TouchableOpacity, Vibration } from 'react-native'
+import { ImageBackground, SafeAreaView, StyleSheet, ScrollView, Text, View, Keyboard, TouchableOpacity, Vibration, Image, Alert } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import Header from '../../components/Header/Header.jsx'
 import home from './../../../assets/images/home.png';
@@ -14,6 +14,9 @@ import { handleText, topRatedSauces } from '../../../utils.js';
 import ProfileCard from '../../components/ProfileCard/ProfileCard.jsx';
 import CustomInput from '../../components/CustomInput/CustomInput.jsx';
 import ExternalUserCard from '../../components/ExternalUserCard/ExternalUserCard.jsx';
+import CustomButtom from '../../components/CustomButtom/CustomButtom.jsx';
+import arrow from "./../../../assets/images/arrow.png";
+
 const ExternalProfileScreen = ({
 }) => {
     const route = useRoute()
@@ -104,7 +107,7 @@ const ExternalProfileScreen = ({
     }, [page]);
     return (
         <ImageBackground style={{ flex: 1, width: '100%', height: '100%' }} source={home}>
-            <SafeAreaView style={{ flex: 1, paddingBottom: isKeyBoard ? 0 : verticalScale(75) }}>
+            <SafeAreaView style={{ flex: 1, paddingBottom: isKeyBoard ? 0 : verticalScale(0) }}>
 
                 <Header
                     showMenu={false}
@@ -181,7 +184,7 @@ const ExternalProfileScreen = ({
                                                 updaterFn={setQuery}
                                                 value={query.search}
                                                 showTitle={false}
-                                                placeholder="Search Followers..."
+                                                placeholder="Search favourite..."
                                                 containterStyle={{
                                                     flexGrow: 1,
                                                 }}
@@ -195,13 +198,14 @@ const ExternalProfileScreen = ({
                                         </View>
                                         <TouchableOpacity onPress={() => {
                                             Vibration.vibrate(10)
-                                            navigation.navigate("AllHotSaucesReviews")
+                                            navigation.navigate("AllReviews")
                                            
                                         }}>
 
                                             <Text style={{
                                                 textDecorationLine: "underline", color: "white",
                                                 fontSize: scale(10),
+                                                fontWeight:700,
                                                 lineHeight: scale(13),
                                                 fontFamily: "Montserrat"
                                             }}>
@@ -213,10 +217,60 @@ const ExternalProfileScreen = ({
                                 }
                                 {
                                     index == 2 && <View style={{
-                                        marginTop: scale(20)
+                                        marginTop: scale(30)
                                     }}>
 
                                         <SauceList name={name} title='favorites' data={topRatedSauces} />
+
+                                        <View style={{
+                                            marginTop:scale(60),
+                                            marginBottom:scale(20),
+                                            gap:scale(20)
+                                        }}>
+                                        <CustomButtom
+                                    Icon={() => <Image source={arrow} />}
+                                    showIcon={true}
+                                    buttonTextStyle={{ fontSize: scale(14), fontWeight:700 }}
+                                    buttonstyle={{ width: "100%", borderColor: "#FFA100", backgroundColor: "#2e210a", padding: 15, display: "flex", gap: 10, flexDirection: "row-reverse", alignItems: "center", justifyContent: "space-between" }}
+                                    onPress={() => {
+                                        Vibration.vibrate(10);
+                                        Alert.alert("Blocked")
+
+                                    }}
+                                    title={`Blocked ${name}`}
+                                    
+                                />
+
+
+<CustomButtom
+                                    Icon={() => <Image source={arrow} />}
+                                    showIcon={true}
+                                    buttonTextStyle={{ fontSize: scale(14) , fontWeight:700}}
+                                    buttonstyle={{ width: "100%", borderColor: "#FFA100", backgroundColor: "#2e210a", padding: 15, display: "flex", gap: 10, flexDirection: "row-reverse", alignItems: "center", justifyContent: "space-between" }}
+                                    onPress={() => {
+                                        Vibration.vibrate(10);
+                                        Alert.alert("reported")
+
+                                    }}
+                                    title={`Report ${name}`}
+                                    
+                                />
+
+
+<CustomButtom
+                                    Icon={() => <Image source={arrow} />}
+                                    showIcon={true}
+                                    buttonTextStyle={{ fontSize: scale(14), fontWeight:700}}
+                                    buttonstyle={{ width: "100%", borderColor: "#FFA100", backgroundColor: "#2e210a", padding: 15, display: "flex", gap: 10, flexDirection: "row-reverse", alignItems: "center", justifyContent: "space-between" }}
+                                    onPress={() => {
+                                        Vibration.vibrate(10);
+                                        // navigation.navigate("SauceDetails")
+                                        Alert.alert("shared")
+                                    }}
+                                    title={`Share ${name} Profile`}
+                                    
+                                />
+                                        </View>
                                     </View>
 
                                 }

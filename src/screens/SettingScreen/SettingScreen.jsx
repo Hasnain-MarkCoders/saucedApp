@@ -15,12 +15,10 @@ import useAxios from '../../../Axios/useAxios';
 const SettingScreen = () => {
     const auth = useSelector(state=>state.auth)
     const navigation = useNavigation()
-    const [showModal, setShowModal] = useState(false)
     const [showBlockModal, setShowBlockmodal] = useState(false)
     const [showDeleteModal, setShowDeleteModal] = useState(false)
     const [loading, setLoading] = useState(false)
     const [isEnabled, setIsEnabled] = useState(true)
-    const [value, setValue] = useState({Name:auth?.name})
     console.log(auth)
  const dispatch = useDispatch()
  const axiosInstance = useAxios()
@@ -39,37 +37,6 @@ const SettingScreen = () => {
             "authenticated": false,
           }))
     }
-
-
-    const handleChangeName = async () => {
-        try{
-            setLoading(true)
-            setIsEnabled(false)
-            // await new Promise(resolve => setTimeout(resolve, 2000));
-         await axiosInstance.patch("/change-name", { newName:value?.Name  })
-           dispatch( handleAuth({
-            "name": value?.Name,
-          }))
-          setShowModal(false)
-          console.log("alert showing")
-    
-          console.log("alert showing")
-        }catch{
-            console.log(error)
-            Alert.alert(error.message || error.toString())
-        }
-
-        finally{
-            setLoading(false)
-            setIsEnabled(true)
-          setShowModal(false)
-
-        }
-        // Snackbar.show({
-        //     text: 'Name.',
-        //     duration: Snackbar.LENGTH_SHORT,
-        //   });
-      };
 
 
 
@@ -121,7 +88,7 @@ const SettingScreen = () => {
                 showsHorizontalScrollIndicator={false} 
                 showsVerticalScrollIndicator={false}
                 style={{ flex: 1 }}>
-                    <Header  cb={() => navigation.navigate("Home")} showProfilePic={false} showDescription={false} title="Setting"/>
+                    <Header  cb={() => navigation.goBack()} showProfilePic={false} showDescription={false} title="Setting"/>
                     <View style={{ paddingHorizontal: 20, flex: 1, justifyContent: "space-between", paddingVertical: 40, paddingBottom: 100, gap: scale(10) }}>
 
                         <View style={{ alignItems: "center", gap: 20 }}>
@@ -130,7 +97,7 @@ const SettingScreen = () => {
                                 showIcon={true}
                                 buttonTextStyle={{ fontSize: scale(14) }}
                                 buttonstyle={{ width: "100%", borderColor: "#FFA100", backgroundColor: "#2e210a", padding: 15, display: "flex", gap: 10, flexDirection: "row-reverse", alignItems: "center", justifyContent: "space-between" }}
-                                onPress={() => setShowModal(true)}
+                                onPress={() => navigation.navigate("Edit Profile")}
                                 title={"Edit Profile"}
                             />
                             <CustomButtom
@@ -181,17 +148,7 @@ const SettingScreen = () => {
 
                         </View>
                     </View>
-                <CustomEditModal
-                isEnabled={isEnabled}
-                loading={loading}
-                initialValue={"hasnain"}
-                placeholder={"Change your name..."}
-                title={"Name"}
-                modalVisible={showModal} setModalVisible={setShowModal}
-                cb={handleChangeName}
-                setValue={setValue}
-                value={value?.Name}
-                />
+            
                  <CustomConfirmModal
                 isEnabled={isEnabled}
                 loading={loading}

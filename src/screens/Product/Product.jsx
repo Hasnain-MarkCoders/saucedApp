@@ -1,4 +1,4 @@
-import { ImageBackground, SafeAreaView, Text, View, Keyboard } from 'react-native'
+import { ImageBackground, SafeAreaView, Text, View, Keyboard, ActivityIndicator } from 'react-native'
 import React, { memo, useEffect, useState } from 'react'
 import Header from '../../components/Header/Header.jsx'
 import getStartedbackground from './../../../assets/images/getStartedbackground.png';
@@ -109,6 +109,15 @@ addToList=(listNumber)=>{
 
 }
 
+
+
+if (loading) {
+  return (
+    <ImageBackground source={getStartedbackground} style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+      <ActivityIndicator size="large" color="#FFA100" />
+    </ImageBackground>
+  );
+}
   return (
     <ImageBackground style={{ flex: 1, width: '100%', height: '100%' }} source={getStartedbackground}>
       <SafeAreaView style={{ flex: 1, paddingBottom: isKeyBoard ? 0 : verticalScale(0) }}>
@@ -153,13 +162,19 @@ addToList=(listNumber)=>{
                       color: "white",
                       lineHeight: verticalScale(29),
                       fontSize: moderateScale(24),
-                      fontWeight: "600",
+                      fontWeight: 600,
                     }}>
                       About Hot Sauce
 
                     </Text>
 
-                    <ProductsBulletsList />
+                    <ProductsBulletsList 
+                    
+                    textStyles={{
+                      fontWeight:700,
+                      color:"white"
+                    }}
+                    />
 
 
                     <Text style={{
@@ -167,6 +182,7 @@ addToList=(listNumber)=>{
                       lineHeight: verticalScale(29),
                       fontSize: moderateScale(24),
                       fontWeight: "600",
+                      marginTop:scale(20)
                     }}>
                       Chili peppers used
 
@@ -182,7 +198,9 @@ addToList=(listNumber)=>{
                       color: "white",
                       lineHeight: verticalScale(29),
                       fontSize: moderateScale(24),
-                      fontWeight: "600",
+                      fontWeight: 600,
+                      marginTop:scale(20)
+                      
                     }}>
                       Ingredients
 
@@ -196,7 +214,9 @@ addToList=(listNumber)=>{
                       color: "white",
                       lineHeight: verticalScale(29),
                       fontSize: moderateScale(24),
-                      fontWeight: "600",
+                      fontWeight: 600,
+                      marginTop:scale(20)
+
                     }}>
                       Food Pairing
 
@@ -245,6 +265,7 @@ addToList=(listNumber)=>{
         />
       </SafeAreaView>
     </ImageBackground>
+
   )
 }
 
