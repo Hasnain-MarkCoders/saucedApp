@@ -1,7 +1,7 @@
 import { ImageBackground, SafeAreaView, Text, View, Keyboard, ActivityIndicator } from 'react-native'
 import React, { memo, useEffect, useState } from 'react'
 import Header from '../../components/Header/Header.jsx'
-import getStartedbackground from './../../../assets/images/getStartedbackground.png';
+import getStartedbackground from './../../../assets/images/ProductDescription.jpg';
 import { moderateScale, scale, verticalScale } from 'react-native-size-matters';
 import { UNSPLASH_URL, VITE_UNSPLASH_ACCESSKEY } from "@env"
 import axios from 'axios';
@@ -14,6 +14,7 @@ import ProductCard from '../../components/ProductCard/ProductCard.jsx';
 import { useRoute } from "@react-navigation/native"
 import CustomSelectListModal from '../../components/CustomSelectListModal/CustomSelectListModal.jsx';
 import Snackbar from 'react-native-snackbar';
+import CommentsList from '../../components/CommentsList/CommentsList.jsx';
 const Product = () => {
   const route = useRoute()
   const {url="", title=""} = route?.params
@@ -24,7 +25,7 @@ const Product = () => {
   const [loading1, setLoading1] = useState(false);
   const [loading2, setLoading2] = useState(false);
   const [loading3, setLoading3] = useState(false);
-
+  const [initialLoading, setInitialLoading]=useState(true)
   const [isKeyBoard, setIsKeyBoard] = useState(false)
   const [modalVisible, setModalVisible] = useState(false)
   const [isEnabled, setisEnabled] = useState(true)
@@ -32,14 +33,11 @@ const Product = () => {
   useEffect(() => {
     const showSubscription = Keyboard.addListener("keyboardDidShow", () => {
       setIsKeyBoard(true)
-      console.log('Keyboard is open');
     });
     const hideSubscription = Keyboard.addListener("keyboardDidHide", () => {
       setIsKeyBoard(false)
-      console.log('Keyboard is closed');
     });
 
-    // Cleanup function
     return () => {
       showSubscription.remove();
       hideSubscription.remove();
@@ -57,16 +55,19 @@ const Product = () => {
             page: page
           }
         });
-        console.log("page", page)
         if (res.data.length === 0) {
           setHasMore(false);
+
         } else {
           setData(prevData => [...prevData, ...res.data]);
+
         }
       } catch (error) {
         console.error('Failed to fetch photos:', error);
+
       } finally {
         setLoading(false);
+        setInitialLoading(false)
       }
     };
     fetchPhotos();
@@ -84,7 +85,6 @@ const handleLoading=(listNumber,action)=>{
 
 }
 addToList=(listNumber)=>{
-  console.log(listNumber)
   handleLoading(listNumber, true)
   Snackbar.show({
     text:  `sauce adding in List ${listNumber}`,
@@ -111,7 +111,7 @@ addToList=(listNumber)=>{
 
 
 
-if (loading) {
+if (initialLoading) {
   return (
     <ImageBackground source={getStartedbackground} style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
       <ActivityIndicator size="large" color="#FFA100" />
@@ -238,6 +238,20 @@ if (loading) {
                     }}>
 
                       <SauceList title='Shared Images' data={topRatedSauces} />
+                      <View>
+                        <Text style={{
+                          color: "white",
+                          lineHeight: scale(29),
+                          fontSize: scale(24),
+                          fontWeight: "600",
+                          marginTop:scale(20)
+                        }}>
+                          Check-ins 
+                        </Text>
+                      </View>
+
+                      <CommentsList setPage={setPage} data={data} loading={loading} hasMore={hasMore} />
+
                      
                     </View>
 

@@ -40,7 +40,6 @@ const GoogleSignInBTN = ({
           const googleCredential = auth.GoogleAuthProvider.credential(idToken);
            const res =   await auth().signInWithCredential(googleCredential)
            const firebaseToken = await res.user.getIdToken();
-           console.log(firebaseToken)
            const myuser = await axiosInstance.post("/auth/firebase-authentication", { accessToken: firebaseToken });
            if (myuser) {
              dispatch(

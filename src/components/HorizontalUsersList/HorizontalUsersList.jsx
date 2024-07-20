@@ -9,7 +9,6 @@ const HorizontalUsersList = ({
     setPage=()=>{},
     loading=false,
 }) => {
-  console.log(data)
   return (
     <View style={{
         gap:scale(20),

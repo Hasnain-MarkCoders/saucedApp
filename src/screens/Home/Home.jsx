@@ -1,43 +1,32 @@
 import React, { useEffect, useState } from 'react';
-import { Image, ImageBackground, ScrollView, StyleSheet, Text, TouchableOpacity, View, Alert, Vibration } from 'react-native';
+import { Image, ImageBackground, ScrollView, StyleSheet, Text, TouchableOpacity, View, Vibration } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { scale, verticalScale, moderateScale } from 'react-native-size-matters';
 import home from './../../../assets/images/home.png';
-import close from "./../../../assets/images/close.png";
-import flashon from "./../../../assets/images/flashon.png";
-import flashoff from "./../../../assets/images/flashoff.png";
+import search from "./../../../assets/images/search_icon.png";
 import qr from "./../../../assets/images/qr.png";
 import { Brands, featuredSauces, handleText, topRatedSauces } from '../../../utils';
 import SauceList from '../../components/SauceList/SauceList';
 import BrandList from '../../components/BrandList/BrandList';
 import CustomInput from '../../components/CustomInput/CustomInput';
 import CustomButtom from '../../components/CustomButtom/CustomButtom';
-import QRCodeScanner from 'react-native-qrcode-scanner';
-import { RNCamera } from 'react-native-camera';
 import BannerList from '../../components/BannerList/BannerList';
 import arrow from "./../../../assets/images/arrow.png";
 import axios from 'axios';
 import { UNSPLASH_URL, VITE_UNSPLASH_ACCESSKEY } from "@env"
-import QRScreen from '../QRScreen/QRScreen';
 import { useNavigation } from '@react-navigation/native';
+import CustomAlertModal from '../../components/CustomAlertModal/CustomAlertModal';
+
 const Home = () => {
     const navigation = useNavigation()
-    const [showQRCode, setShowQRCode] = useState(false)
-    const [torch, setTorch] = useState(false)
     const [banners, setBanners] = useState([])
     const [page, setPage] = useState(1)
     const [hasMore, setHasMore] = useState(true)
     const [loading, setLoading] = useState(false);
+    const [alertModal, setAlertModal] = useState(false)
     const [data, setData] = useState({
         search: "",
     });
-
-
-    onSuccess = e => {
-
-        Alert.alert("QR Code", e.data);
-    };
-
     useEffect(() => {
         const fetchPhotos = async () => {
             if (!hasMore || loading) return;
@@ -76,6 +65,10 @@ const Home = () => {
                             <View style={styles.searchContainer}>
                                 <View style={styles.searchBarContainer}>
                                     <CustomInput
+                                            imageStyles={{top:"50%", transform: [{ translateY: -0.5 * scale(25) }], width:scale(25), height:scale(25), aspectRatio:"1/1"}}
+                                            isURL={false}
+                                            showImage={true}
+                                            uri={search}
                                         name="search"
                                         onChange={handleText}
                                         updaterFn={setData}
@@ -90,6 +83,7 @@ const Home = () => {
                                             borderWidth: 1,
                                             borderRadius: 10,
                                             padding: 15,
+                                            paddingLeft:scale(45)
 
                                         }} />
 
@@ -125,11 +119,25 @@ const Home = () => {
                                     showIcon={true}
                                     buttonTextStyle={{ fontSize: scale(14) }}
                                     buttonstyle={{ width: "100%", borderColor: "#FFA100", backgroundColor: "#2e210a", padding: 15, display: "flex", gap: 10, flexDirection: "row-reverse", alignItems: "center", justifyContent: "space-between" }}
-                                    onPress={() => Alert.alert("Hot Sauce Map")}
+                                    onPress={() => setAlertModal(true)}
                                     title={"Hot Sauce Map"}
                                 />
                                 <BrandList title='Top Rated Brands' data={Brands} />
-                            <BannerList  loading={loading} showText={false} hasMore={hasMore} setPage={setPage} data={banners} />
+                                <View style={{
+                                    gap:scale(20)
+                                }}>
+                                    <Text style={
+                                        {
+                                            color: "white",
+                                            lineHeight: verticalScale(28.8),
+                                            fontSize: moderateScale(24),
+                                            fontWeight: "600",
+                                        }
+                                    }>
+                                        Official Reviews
+                                    </Text>
+                            <BannerList   loading={loading} showText={false} hasMore={hasMore} setPage={setPage} data={banners} />
+                                </View>
 
                                 <CustomButtom
                                     Icon={() => <Image source={arrow} />}
@@ -144,6 +152,11 @@ const Home = () => {
                                 />
 
                             </View>
+                            <CustomAlertModal 
+                            title='Hot Sauce Map live Soon.'
+                            modalVisible={alertModal}
+                            setModalVisible={()=>setAlertModal(false)}
+                            />
                         </SafeAreaView>
                     </ScrollView>
                 </ImageBackground>

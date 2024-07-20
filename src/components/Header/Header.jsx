@@ -22,6 +22,7 @@ let url = ""
   const { user, authenticated } = auth
   url = auth?.url
   const titleArray = title?.split(" ")
+  console.log(auth)
   return (
 
     <View style={{
@@ -44,14 +45,20 @@ let url = ""
 
       </View>
 
-{   (authenticated && showProfilePic)?   <Image
-        style={{
-          width: scale(40),
-          height: scale(40),
-          borderRadius: scale(50)
-        }}
-        source={{ uri: url }}
-      />:(authenticated && showMenu)?<TouchableOpacity onPress={() => (navigation.dispatch(DrawerActions.openDrawer(), Vibration.vibrate(10)))}>
+{   (authenticated && showProfilePic)?  
+      <TouchableOpacity onPress={()=>{navigation.navigate("Main")}}>
+
+        <Image
+         style={{
+           width: scale(40),
+           height: scale(40),
+           borderRadius: scale(50)
+         }}
+         source={{ uri: url }}
+       />
+      </TouchableOpacity>
+      
+      :(authenticated && showMenu)?<TouchableOpacity onPress={() => (navigation.dispatch(DrawerActions.openDrawer(), Vibration.vibrate(10)))}>
         <Image source={menu}/>
       </TouchableOpacity>:null
 }
@@ -97,7 +104,7 @@ let url = ""
         marginTop: 15,
         fontFamily: "Montserrat",
         fontSize: 14,
-        fontWeight: 600
+        fontWeight: "700"
       }}>
         {description}
       </Text>}

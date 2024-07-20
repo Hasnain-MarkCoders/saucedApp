@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Alert, Modal, StyleSheet, Text, Pressable, View, Image, TouchableOpacity } from 'react-native';
 import close from "./../../../assets/images/close.png"
 import { scale } from 'react-native-size-matters';
@@ -14,6 +14,15 @@ const CustomConfirmModal = ({
   loading=false,
     title=""
 }) => {
+
+  useEffect(()=>{
+    if(modalVisible){
+      setTimeout(()=>{
+        setModalVisible()
+      },3000)
+    }
+
+  },[modalVisible])
 
   return (
     <View style={{

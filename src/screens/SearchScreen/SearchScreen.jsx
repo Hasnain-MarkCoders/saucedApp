@@ -1,13 +1,12 @@
-import { Image, ImageBackground, StyleSheet, Text, TouchableOpacity, Vibration, View } from 'react-native'
+import { Image, ImageBackground, Text, TouchableOpacity, Vibration, View } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import home from "./../../../assets/images/home.png"
 import { handleText } from '../../../utils'
 import { scale } from 'react-native-size-matters'
 import qr from "./../../../assets/images/qr.png"
 import CustomInput from '../../components/CustomInput/CustomInput'
-import QRScreen from '../QRScreen/QRScreen'
 import { useNavigation } from '@react-navigation/native'
-import SauceList from '../../components/SauceList/SauceList'
+import search from "./../../../assets/images/search_icon.png";
 import ProductSearchList from '../../components/ProductSearchList/ProductSearchList'
 import { UNSPLASH_URL, VITE_UNSPLASH_ACCESSKEY } from "@env"
 import axios from 'axios'
@@ -51,14 +50,12 @@ const SearchScreen = () => {
     }, [page]);
 
     useEffect(() => {
-        console.log("query.search", query.search)
         const fetchPhotos = async () => {
             if (!query?.search?.trim()) {
                 return
             }
             console.log("query.search", query.search)
             if (loading) return;
-            console.log("page", page)
             setLoading(true);
             try {
                 const res = await axios.get(`${UNSPLASH_URL}/search/photos`, {
@@ -90,7 +87,7 @@ const SearchScreen = () => {
                 paddingVertical:scale(20)
             }}>
             <View style={{
-                marginBottom: scale(20)
+                marginBottom: scale(40),
             }}>
                 <View style={{
                     flexDirection: "row",
@@ -99,12 +96,16 @@ const SearchScreen = () => {
                     gap: 10
                 }}>
                     <CustomInput
+                    imageStyles={{top:"50%", transform: [{ translateY: -0.5 * scale(25) }], width:scale(25), height:scale(25), aspectRatio:"1/1"}}
+                      isURL={false}
+                      showImage={true}
+                      uri={search}
                         name="search"
                         onChange={handleText}
                         updaterFn={setQuery}
                         value={query.search}
                         showTitle={false}
-                        placeholder="Search For Sauce..."
+                        placeholder="Hot Sauce..."
                         containterStyle={{
                             flexGrow: 1,
                         }}
@@ -113,6 +114,7 @@ const SearchScreen = () => {
                             borderWidth: 1,
                             borderRadius: 10,
                             padding: 15,
+                            paddingLeft:scale(45)
 
                         }} />
 
@@ -144,7 +146,8 @@ const SearchScreen = () => {
             </View>
             <View style={{
                 flex:1,
-                gap:scale(20)
+                gap:scale(20),
+                marginBottom:60
             }}>
                 <ProductSearchList  loading={loading} hasMore={hasMore} setPage={setPage} data={data}/>
 

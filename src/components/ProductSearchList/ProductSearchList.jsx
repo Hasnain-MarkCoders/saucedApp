@@ -15,7 +15,6 @@ const ProductSearchList = ({
 }) => {
     return (
         <View style={styles.container}>
-            <Text style={styles.title}>{title}</Text>
             <FlatList
                 data={data}
                 showsVerticalScrollIndicator={false}
@@ -50,14 +49,9 @@ const ProductSearchList = ({
 const styles = StyleSheet.create({
     container: {
         flex: 1,
+
     },
-    title: {
-        color: "white",
-        lineHeight: verticalScale(29),
-        fontSize: moderateScale(24),
-        fontWeight: "600",
-        // marginBottom: verticalScale(10),
-    },
+ 
     listContent: {
         justifyContent: 'space-between',
     },

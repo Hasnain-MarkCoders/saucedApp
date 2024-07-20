@@ -1,24 +1,21 @@
-import React, { useEffect, useState } from 'react';
-import { View, SafeAreaView, ImageBackground, ScrollView, Alert, Image, Linking, Text, TouchableOpacity, StyleSheet, Vibration } from 'react-native';
+import React, {  useState } from 'react';
+import { View, SafeAreaView, ImageBackground, ScrollView, Alert, Image, Text, TouchableOpacity, StyleSheet, Vibration } from 'react-native';
 import home from './../../../assets/images/home.png';
 import Header from '../../components/Header/Header';
 import CustomButtom from '../../components/CustomButtom/CustomButtom';
-import arrow from "./../../../assets/images/arrow.png";
 import { useNavigation } from '@react-navigation/native';
 import { scale } from 'react-native-size-matters';
 import { useDispatch, useSelector } from 'react-redux';
 import { handleAuth } from '../../../android/app/Redux/userReducer';
 import { handleText } from '../../../utils.js';
 import CustomEditModal from '../../components/EditModal.jsx/EditModal';
-import Snackbar from 'react-native-snackbar';
 import CustomConfirmModal from '../../components/CustomConfirmModal/CustomConfirmModal';
 import useAxios, { host } from '../../../Axios/useAxios';
-import CustomRating from '../../components/CustomRating/CustomRating';
-import ProfileImage from '../../components/ProfileImage/ProfileImage';
 import { launchImageLibrary } from 'react-native-image-picker';
 import CustomInput from '../../components/CustomInput/CustomInput';
 import SelectDropdown from 'react-native-select-dropdown'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import CustomAlertModal from '../../components/CustomAlertModal/CustomAlertModal.jsx';
 
 
 const emojisWithIcons = [
@@ -53,6 +50,8 @@ const CheckinScreen = () => {
     const [value, setValue] = useState({ Name: auth?.name })
     const [imageUri, setImageUri] = useState("");
     const [imageUris, setImageUris] = useState([]);
+    const [alertModal, setAlertModal] =useState(false)
+    const [message, setMessage] = useState("")
     const [data, setData] = useState({
         description: "",
         select: ""
@@ -86,9 +85,7 @@ const CheckinScreen = () => {
                 "name": value?.Name,
             }))
             setShowModal(false)
-            console.log("alert showing")
 
-            console.log("alert showing")
         } catch {
             console.log(error)
             Alert.alert(error.message || error.toString())
@@ -100,10 +97,6 @@ const CheckinScreen = () => {
             setShowModal(false)
 
         }
-        // Snackbar.show({
-        //     text: 'Name.',
-        //     duration: Snackbar.LENGTH_SHORT,
-        //   });
     };
 
 
@@ -207,15 +200,30 @@ const CheckinScreen = () => {
 
 
     const handleSubmit = () => {
-        console.log("data", data)
+        if(!data.description){
+              setMessage("Please write description.")
+              return setAlertModal(true)
+        }
+        if(!data.select){
+            setMessage("Please slect an option from list.")
+            return setAlertModal(true)
+      }
         Vibration.vibrate(10)
-        Alert.alert("response received")
-        setTimeout(()=>{
-            navigation.navigate("AllCheckinsScreen")
-        },1000)
+        setLoading(true)
 
+        if (imageUri.length<1){
+           
+            setTimeout(()=>{
+                setMessage("Check complete.")
+                setAlertModal(true)
+                setTimeout(()=>{
+                    setLoading(false)
+                    navigation.navigate("AllCheckinsScreen")
+                },1000)
+            },2000)
+            return
+        }
         const uploadPromises = imageUris.map(uri => {
-            console.log(uri)
             return handleImage({
                 uri,
                 type: 'image/jpeg', // Assuming JPEG for simplicity; adjust as needed
@@ -226,15 +234,32 @@ const CheckinScreen = () => {
         Promise.allSettled(uploadPromises).then(results => {
             results.forEach((result, index) => {
                 if (result.status === 'fulfilled') {
-                    console.log(`Image ${index + 1} uploaded successfully`);
+                    setMessage("Check complete.")
+                    setAlertModal(true)
+                    setTimeout(()=>{
+                    setLoading(false)
+                        navigation.navigate("AllCheckinsScreen")
+                    },2000)
+                    setImageUris([])
+        setLoading(false)
+
                 } else {
                     console.error(`Failed to upload image ${index + 1}: ${result?.reason}`);
+                    setMessage(`Check Failed: Failed to upload image ${index + 1}: ${result?.reason}`)
+                    setAlertModal(true)
+                      setLoading(false)
+
                 }
             });
         }).catch(error => {
+            setMessage(error?.message)
+            setAlertModal(true)
             console.error('An error occurred during uploads:', error);
-            Alert.alert('Upload Error', 'An error occurred while uploading images.');
+            // Alert.alert('Upload Error', 'An error occurred while uploading images.');
+            setLoading(false)
+
         });
+     
     };
 
     
@@ -251,6 +276,8 @@ const CheckinScreen = () => {
 
                         <View style={{ alignItems: "center", gap: 20 }}>
                             <CustomInput
+                imageStyles={{top:"4%", left:"4%", transform: [{ translateY: 10 }], width:scale(25), height:scale(25), aspectRatio:"1/1"}}
+
                                 showImage={true}
                                 uri={profileUri}
                                 multiline={true}
@@ -354,6 +381,7 @@ const CheckinScreen = () => {
                             </View>
 
                             <CustomButtom
+                            loading={loading}
                                 showIcon={false}
                                 buttonTextStyle={{ fontSize: scale(16) }}
                                 buttonstyle={{ width: "100%", borderColor: "#FFA100", backgroundColor: "#2e210a", paddingHorizontal: scale(15), paddingVertical: scale(13), display: "flex", gap: 10, flexDirection: "row-reverse", alignItems: "center", justifyContent: "center" }}
@@ -393,6 +421,11 @@ const CheckinScreen = () => {
                         modalVisible={showDeleteModal} setModalVisible={setShowDeleteModal}
                         cb={handleDelete}
                     />
+                         <CustomAlertModal
+                            title={message}
+                            modalVisible={alertModal}
+                            setModalVisible={()=>setAlertModal(false)}
+                            />
                 </ScrollView>
             </SafeAreaView>
         </ImageBackground>

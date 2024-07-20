@@ -26,7 +26,6 @@ const UploadImage = () => {
         return fetch(`${host}/change-image`, postData)
             .then((response) => response.json())
             .then((responseJson) => {
-                console.log('responseJson', responseJson);
                      dispatch(handleAuth({
                         url
                     }))
@@ -37,6 +36,7 @@ const UploadImage = () => {
                 if(responseJson.code > 200){
                     Alert.alert(responseJson?.error)
                 }
+
                 return responseJson;
             })
             .catch((error) => {
@@ -108,6 +108,7 @@ const styles = StyleSheet.create({
     },
     text: {
         color: "#FFA100",
+        textDecorationLine:"underline",
         fontSize: scale(12),
         lineHeight: scale(25),
     },

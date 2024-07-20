@@ -1,21 +1,19 @@
-import { ImageBackground, SafeAreaView, StyleSheet, ScrollView, Text, View, Keyboard, TouchableOpacity, Vibration, Image, Alert } from 'react-native'
+import { ImageBackground, SafeAreaView, StyleSheet, Text, View, Keyboard, TouchableOpacity, Vibration, Image, Alert } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import Header from '../../components/Header/Header.jsx'
 import home from './../../../assets/images/home.png';
 import { scale, verticalScale } from 'react-native-size-matters';
 import { UNSPLASH_URL, VITE_UNSPLASH_ACCESSKEY } from "@env"
 import axios from 'axios';
-import FollowersList from '../../components/FollowersList/FollowersList.jsx';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { FlatList } from 'react-native-gesture-handler';
-import HorizontalUsersList from '../../components/HorizontalUsersList/HorizontalUsersList.jsx';
 import SauceList from '../../components/SauceList/SauceList.jsx';
 import { handleText, topRatedSauces } from '../../../utils.js';
-import ProfileCard from '../../components/ProfileCard/ProfileCard.jsx';
 import CustomInput from '../../components/CustomInput/CustomInput.jsx';
 import ExternalUserCard from '../../components/ExternalUserCard/ExternalUserCard.jsx';
 import CustomButtom from '../../components/CustomButtom/CustomButtom.jsx';
 import arrow from "./../../../assets/images/arrow.png";
+import search from './../../../assets/images/search_icon.png';
 
 const ExternalProfileScreen = ({
 }) => {
@@ -34,11 +32,9 @@ const ExternalProfileScreen = ({
     useEffect(() => {
         const showSubscription = Keyboard.addListener("keyboardDidShow", () => {
             setIsKeyBoard(true)
-            console.log('Keyboard is open');
         });
         const hideSubscription = Keyboard.addListener("keyboardDidHide", () => {
             setIsKeyBoard(false)
-            console.log('Keyboard is closed');
         });
 
         // Cleanup function
@@ -52,9 +48,7 @@ const ExternalProfileScreen = ({
             if (!query?.search?.trim()) {
                 return
             }
-            console.log("query.search", query.search)
             if (loading) return;
-            console.log("page", page)
             setLoading(true);
             try {
                 const res = await axios.get(`${UNSPLASH_URL}/search/photos`, {
@@ -65,7 +59,7 @@ const ExternalProfileScreen = ({
                     }
                 });
 
-                setData(prev => [...prev, ...res.data.results]);
+                setData(prev => [ ...res.data.results,...prev]);
 
             } catch (error) {
                 console.error('Failed to fetch photos:', error);
@@ -91,7 +85,6 @@ const ExternalProfileScreen = ({
                         page: page
                     }
                 });
-                console.log("page", page)
                 if (res.data.length === 0) {
                     setHasMore(false);
                 } else {
@@ -178,6 +171,11 @@ const ExternalProfileScreen = ({
                                         }}>
 
                                             <CustomInput
+                                                                                  imageStyles={{top:"50%", transform: [{ translateY: -0.5 * scale(25) }], width:scale(25), height:scale(25), aspectRatio:"1/1"}}
+                                                                                  isURL={false}
+                                                                                  showImage={true}
+                                                                                  uri={search}
+                                            
                                                 cb={() => setPage(1)}
                                                 name="search"
                                                 onChange={handleText}
@@ -193,6 +191,7 @@ const ExternalProfileScreen = ({
                                                     borderWidth: 1,
                                                     borderRadius: 10,
                                                     padding: 15,
+                                                    paddingLeft:scale(45)
 
                                                 }} />
                                         </View>
@@ -220,7 +219,7 @@ const ExternalProfileScreen = ({
                                         marginTop: scale(30)
                                     }}>
 
-                                        <SauceList name={name} title='favorites' data={topRatedSauces} />
+                                        <SauceList name={name} title='favorites' searchTerm={query.search}  />
 
                                         <View style={{
                                             marginTop:scale(60),

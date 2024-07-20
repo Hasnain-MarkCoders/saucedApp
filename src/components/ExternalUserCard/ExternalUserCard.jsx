@@ -1,5 +1,5 @@
 import { Image, StyleSheet, Text, View } from 'react-native'
-import React from 'react'
+import React, { memo } from 'react'
 import { scale } from 'react-native-size-matters'
 import { useSelector } from 'react-redux'
 import { generateThreeDigitRandomNumber, getRandomDate } from '../../../utils'
@@ -9,10 +9,6 @@ const ExternalUserCard = ({
     name=""
 }) => {
     const auth = useSelector(state => state.auth)
-    console.log("auth", auth)
-    // const url = auth?.url || ""
-    // const name =  auth?.user?.user?.displayName || auth?.name
-    console.log( )
     const circles = [1,1,1,1,1]
     return (
         <View style={{
@@ -160,6 +156,6 @@ const ExternalUserCard = ({
     )
 }
 
-export default ExternalUserCard
+export default memo(ExternalUserCard)
 
 const styles = StyleSheet.create({})

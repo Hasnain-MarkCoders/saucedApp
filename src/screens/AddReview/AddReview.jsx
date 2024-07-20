@@ -21,11 +21,9 @@ const AddReview = () => {
     useEffect(() => {
         const showSubscription = Keyboard.addListener("keyboardDidShow", () => {
             setIsKeyBoard(true)
-            console.log('Keyboard is open');
         });
         const hideSubscription = Keyboard.addListener("keyboardDidHide", () => {
             setIsKeyBoard(false)
-            console.log('Keyboard is closed');
         });
 
         // Cleanup function
@@ -34,9 +32,7 @@ const AddReview = () => {
             hideSubscription.remove();
         };
     }, []);
-useEffect(()=>{
-console.log(data)
-},[data])
+
     return (
         <ImageBackground style={{ flex: 1, width: '100%', height: '100%' }} source={home}>
             <SafeAreaView style={{ flex: 1, paddingBottom: isKeyBoard ? 0 : verticalScale(0) }}>

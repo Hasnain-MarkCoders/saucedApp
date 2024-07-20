@@ -38,7 +38,6 @@ const ProductCard = ({
                 gap: scale(20),
             }}>
                 <View style={{
-                    backgroundColor: "green",
                 }}>
 
                     <Lightbox
@@ -86,7 +85,7 @@ const ProductCard = ({
                                 }}>{title}</Text>
                         </View>
                         <TouchableOpacity onPress={() => {
-                            navigation.navigate("AddReview")
+                            navigation.navigate("AllReviews")
                         }}>
                             <Text style={{
                                 color: "white",

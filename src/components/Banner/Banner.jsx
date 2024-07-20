@@ -11,9 +11,11 @@ const Banner = ({
     title = "",
     cb = () => { }
 }) => {
+
+  
     const navigation = useNavigation()
     return (
-        <TouchableOpacity onPress={() => { !showText && navigation.navigate("ProductDetail", { url, title }) }}>
+        <TouchableOpacity  activeOpacity={.8} onPress={() => { !showText && navigation.navigate("ProductDetail", { url, title }) }}>
 
             <ImageBackground
 
@@ -36,7 +38,8 @@ const Banner = ({
                                 lineHeight: scale(13),
                                 fontFamily: "Montserrat",
                                 maxWidth: "80%",
-                                fontWeight: '700'
+                                fontWeight: '700',
+                               
                             }}>
 
                                 Lorem ipsum dolor sit amet consectetur adipisicing elit. Blanditiis ad

@@ -1,35 +1,29 @@
 import React, { useEffect, useState } from 'react';
-import { Text, View, SafeAreaView, ImageBackground, TouchableOpacity, Dimensions, ScrollView, Alert, Pressable, Vibration, Image } from 'react-native';
+import { Text, View, SafeAreaView, ImageBackground, TouchableOpacity, Dimensions, ScrollView,Vibration, Image, ActivityIndicator } from 'react-native';
 import home from './../../../assets/images/home.png';
 import Header from '../../components/Header/Header';
 import CustomInput from '../../components/CustomInput/CustomInput';
 import { handleText } from '../../../utils';
 import CustomButtom from '../../components/CustomButtom/CustomButtom';
 import google from "./../../../assets/images/google-icon.png";
-import apple from "./../../../assets/images/apple-icon.png";
 import fb from "./../../../assets/images/facebook-icon.png";
-import IconButton from '../../components/IconButton/IconButton';
 import { useNavigation } from '@react-navigation/native';
 import { useDispatch } from 'react-redux';
 import { handleAuth } from '../../../android/app/Redux/userReducer';
-import auth from '@react-native-firebase/auth';
-import FacebookSignInBTN from '../../components/FacebookSignInBTN/FacebookSignInBTN';
-import GoogleSignInBTN from '../../components/GoogleSignInBTN/GoogleSignInBTN';
+import auth, { firebase } from '@react-native-firebase/auth';
 import useAxios from '../../../Axios/useAxios';
-import { scale } from 'react-native-size-matters';
+import { scale } from 'react-native-size-matters'
+import openEye from "./../../../assets/images/openEye.png"
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
 import { AccessToken, LoginManager } from 'react-native-fbsdk-next';
+import CustomAlertModal from '../../components/CustomAlertModal/CustomAlertModal';
 // Get screen dimensions
-const { width } = Dimensions.get('window');
-
-// Utility for responsive font size
-const responsiveFontSize = (f) => {
-  const tempHeight = (16 / 9) * width;
-  return Math.sqrt(Math.pow(tempHeight, 2) + Math.pow(width, 2)) * (f / 100);
-};
 
 const SignIn = () => {
   const dispatch = useDispatch()
+  const [alertModal, setAlertModal] =useState(false)
+  const [message, setMessage] = useState("")
+  const [authLoading , setAuthLoading]= useState(false)
   const [isEnabled, setIsEnabled] = useState(true);
   const [loading, setLoading] = useState(false)
   const axiosInstance = useAxios()
@@ -43,26 +37,30 @@ const SignIn = () => {
    
       // Input validation
       if (!data.email) {
-        Alert.alert("Email is required!");
+        setAlertModal(true)
+        setMessage("Email is required!")
         return;
       }
       if (!data.password) {
-        Alert.alert("Password is required!");
+        setAlertModal(true)
+        setMessage("Password is required!")
         return;
       }
       setIsEnabled(false); // Disable login button or other elements
       setLoading(true)
+      setAuthLoading(true)
       // Firebase authentication
       const userCredential = await auth().signInWithEmailAndPassword(data.email, data.password);
       const user = userCredential.user;
 
       if (user) {
         const token = await user?.getIdToken();
-        console.log('Firebase Token:', token);
 
         // Your API authentication
-        const myuser = await axiosInstance.post("/auth/firebase-authentication", { accessToken: token });
-        console.log("Authenticated user details:", myuser?.data?.user);
+
+        const myuser = await axiosInstance.post("/auth/firebase-authentication", { accessToken: token })
+        console.log("<==*myuser*==>", myuser)
+        console.log("<==*firebasetoken*==>", token)
         if (myuser) {
           dispatch(
             handleAuth({
@@ -78,25 +76,43 @@ const SignIn = () => {
               "authenticated": true,
               "welcome": myuser?.data?.user?.welcome
             }))
+        }else {
+          console.log('No user found');
+          setAlertModal(true)
+          setMessage('No user found on Firebase')
+        setAuthLoading(false)
+  
         }
+      setAuthLoading(false)
+
         // Optional: Update state or handle user authentication details
       } else {
         console.log('No user found');
-        Alert.alert('No user found');
+        setAlertModal(true)
+        setMessage('No user found on Firebase')
+      setAuthLoading(false)
+
       }
     } catch (error) {
       // Handle specific errors
+      setAuthLoading(false)
+
       if (error.code === 'auth/email-already-in-use') {
-        Alert.alert('That email address is already in use!');
+        setAlertModal(true)
+        setMessage('That email address is already in use!')
       } else if (error.code === 'auth/invalid-email') {
-        Alert.alert('That email address is invalid!');
+        setAlertModal(true)
+        setMessage('That email address is invalid!')
       } else {
         console.error(error);
-        Alert.alert('An error occurred during login');
+        setAlertModal(true)
+        setMessage('An error occurred during login')
       }
     } finally {
       setIsEnabled(true); // Re-enable button or other elements
       setLoading(false)
+      setAuthLoading(false)
+
     }
   }
 
@@ -104,9 +120,13 @@ const SignIn = () => {
   async function onFacebookButtonPress() {
     // Attempt login with permissions
     try{
+      setAuthLoading(true)
+
         const result = await LoginManager.logInWithPermissions(['public_profile', 'email']);
   
         if (result.isCancelled) {
+          setAlertModal(true)
+          setMessage('User cancelled the login process')
           throw 'User cancelled the login process';
         }
       
@@ -114,6 +134,8 @@ const SignIn = () => {
         const data = await AccessToken.getCurrentAccessToken();
       
         if (!data) {
+          setAlertModal(true)
+          setMessage('Something went wrong obtaining access token')
           throw 'Something went wrong obtaining access token';
         }
       
@@ -140,19 +162,28 @@ const SignIn = () => {
               "welcome":myuser?.data?.user?.welcome
             }))
         }
+      setAuthLoading(true)
+
       } catch (error) {
    // Handle specific errors
+   setAuthLoading(false)
+
    if (error.code === 'auth/email-already-in-use') {
-     Alert.alert('That email address is already in use!');
+     setAlertModal(true)
+     setMessage('That email address is already in use!')
    } else if (error.code === 'auth/invalid-email') {
-     Alert.alert('That email address is invalid!');
+    setAlertModal(true)
+    setMessage('That email address is invalid!')
    } else {
      console.error(error);
-     Alert.alert('An error occurred during login');
+     setAlertModal(true)
+     setMessage('An error occurred during login')
    }
  } finally {
    setIsEnabled(true); // Re-enable button or other elements
    setLoading(false)
+   setAuthLoading(false)
+
  }
    
   }
@@ -160,14 +191,16 @@ const SignIn = () => {
 
   const signInWithGoogle = async () => {
     try{
+      setAuthLoading(true)
+
      await GoogleSignin.hasPlayServices({showPlayServicesUpdateDialog: true})
      const { idToken } = await GoogleSignin.signIn();
      const googleCredential = auth.GoogleAuthProvider.credential(idToken);
       const res =   await auth().signInWithCredential(googleCredential)
       const firebaseToken = await res.user.getIdToken();
-      console.log(firebaseToken)
       const myuser = await axiosInstance.post("/auth/firebase-authentication", { accessToken: firebaseToken });
-      if (myuser) {
+      console.log("<========myuser==========>", typeof myuser)
+      if (myuser ) {
         dispatch(
           handleAuth({
             "token": myuser?.data?.user?.token,
@@ -183,25 +216,40 @@ const SignIn = () => {
             "welcome":myuser?.data?.user?.welcome
           }))
       }
+      setAuthLoading(false)
+
     } catch (error) {
+      setAuthLoading(false)
+
  // Handle specific errors
  if (error.code === 'auth/email-already-in-use') {
-   Alert.alert('That email address is already in use!');
+   setAlertModal(true)
+   setMessage('That email address is already in use!')
+   setAuthLoading(false)
+
  } else if (error.code === 'auth/invalid-email') {
-   Alert.alert('That email address is invalid!');
+    setAlertModal(true)
+    setMessage('That email address is invalid!')
+    setAuthLoading(false)
+
  } else {
    console.error(error);
-   Alert.alert('An error occurred during login');
+   setAlertModal(true)
+   setMessage('An error occurred during login')
+   setAuthLoading(false)
+
  }
 } finally {
  setIsEnabled(true); // Re-enable button or other elements
  setLoading(false)
+ setAuthLoading(false)
+
 }
 
  };
 
   const navigateToSignUp = () => {
-    navigation.navigate('SignUp')
+    navigation.goBack()
     // console.log("hello from hasnain")
   }
 
@@ -219,6 +267,12 @@ const SignIn = () => {
    });
 }, []);
 
+if(authLoading){
+  return  <ImageBackground style={{ flex: 1, justifyContent: 'center', alignItems: 'center', width: '100%', height: '100%' }} source={home}>
+  <ActivityIndicator  color="#FFA100" size="large" />
+</ImageBackground>
+}
+
   return (
     <ImageBackground style={{ flex: 1, width: '100%', height: '100%' }} source={home}>
     <SafeAreaView style={{ flex: 1 }}>
@@ -227,10 +281,11 @@ const SignIn = () => {
       showsVerticalScrollIndicator={false}
       contentContainerStyle={{ flexGrow: 1 }}
       >
-     <Header cb={()=>{navigateToSignUp();  Vibration.vibrate(10)}} title="Sign in" description="Sign in with your data that you entered during registration." /> 
+     <Header showMenu={false} showProfilePic={false} cb={()=>{navigateToSignUp();  Vibration.vibrate(10)}} title="Sign in" description="Sign in with your data that you entered during registration." /> 
     <View style={{  gap:scale(40),paddingHorizontal:scale(20), paddingVertical:scale(30)}}>
       <View style={{
         gap: 20, flex:1,
+        marginBottom:scale(20)
       }}>
         <CustomInput
           onChange={handleText}
@@ -239,7 +294,16 @@ const SignIn = () => {
           title="Email"
           name="email"
         />
+        <View  style={{
+                gap:scale(10)
+              }}>
+
         <CustomInput
+          imageStyles={{top:"50%", left:"90%", transform: [{ translateY: -0.5 * scale(20) }], width:scale(20), height:scale(20), aspectRatio:"1/1"}}
+          isURL={false}
+          showImage={true}
+          uri={openEye}
+
           onChange={handleText}
           updaterFn={setData}
           value={data.password}
@@ -247,6 +311,19 @@ const SignIn = () => {
           name="password"
           secureTextEntry={true}
         />
+           <TouchableOpacity 
+              onPress={()=>
+                {setAlertModal(true)
+                setMessage('feature live soon.')}
+              }>
+              <Text style={{
+                color:"#C1C1C1",
+                fontSize:scale(12),
+                lineHeight:scale(25),
+                textAlign:"right"
+              }}>Forgot Password</Text>
+              </TouchableOpacity>
+        </View>
       </View>
       <View style={{ alignItems: "center", gap: 20 }}>
         <CustomButtom
@@ -256,15 +333,7 @@ const SignIn = () => {
           onPress={()=>isEnabled ? (handleLogin(),  Vibration.vibrate(10)) : null}
           title={"Sign In"}
         />
-        {/* <View style={{
-          flexDirection: "row",
-          justifyContent: "center",
-          alignItems: "center"
-        }}>
-          <GoogleSignInBTN onPress={() => console.log("hello from Google login")} url={google} />
-          <IconButton onPress={() => console.log("hello from Apple login")} url={apple} />
-          <FacebookSignInBTN onPress={() => console.log("hello from Facebook login")} url={fb} />
-        </View> */}
+       
 
 <Text style={{
               color:"#FFA100",
@@ -298,7 +367,7 @@ const SignIn = () => {
               />
             </View>
         <View style={{ flexDirection: "row"  ,marginTop:scale(20)}}>
-          <Text style={{ color: "white", fontSize: responsiveFontSize(1.6), lineHeight: 18 }}>Don't have an account? </Text>
+          <Text style={{ color: "white", fontSize: scale(14), lineHeight: 18 }}>Don't have an account? </Text>
           <TouchableOpacity  onPress={() => {navigateToSignUp(),  Vibration.vibrate(10)}} style={{ verticalAlign: "middle" }}>
             <Text style={{ color: "#FFA100", fontSize: scale(14), lineHeight: 18,  marginTop:scale(3),paddingHorizontal:scale(3)}}>Register</Text>
           </TouchableOpacity>
@@ -306,7 +375,11 @@ const SignIn = () => {
       </View>
     </View>
     </ScrollView>
-
+    <CustomAlertModal
+                            title={message}
+                            modalVisible={alertModal}
+                            setModalVisible={()=>setAlertModal(false)}
+                            />
     </SafeAreaView>
     </ImageBackground>
 

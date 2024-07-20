@@ -1,20 +1,29 @@
-import {  Text, View, SafeAreaView, Image, Dimensions } from 'react-native'
+import {   View, SafeAreaView } from 'react-native'
 import React from 'react'
 import { ImageBackground } from 'react-native';
 import home from './../../../assets/images/home.png';
 import WelcomeLists from '../../components/WelcomeList/WelcomeList';
-import back from "./../../../assets/images/back.png"
 import CustomButtom from '../../components/CustomButtom/CustomButtom';
 import Header from '../../components/Header/Header';
-import BottomNavigation from '../../components/BottomNavigation/BottomNavigation';
-const { width } = Dimensions.get('window');
+import { scale } from 'react-native-size-matters';
+import axios from 'axios';
+import { useSelector } from 'react-redux';
+import { host } from '../../../Axios/useAxios';
 
-// Utility for responsive font size
-const responsiveFontSize = (f) => {
-  const tempHeight = (16 / 9) * width;
-  return Math.sqrt(Math.pow(tempHeight, 2) + Math.pow(width, 2)) * (f / 100);
-};
 const Welcome = () => {
+const userAuth = useSelector(state=>state.auth)
+  const handleWelcome = async()=>{
+      try {
+        const response = await axios.post(host + "/welcome", {
+          headers: {
+            Authorization: `Bearer ${userAuth.token}`, // Assuming userAuth is defined and accessible
+          }
+        });
+
+      } catch (error) {
+        console.log("Error: ", error);
+      }
+  }
   return (
     <ImageBackground style={{
       flex: 1,
@@ -37,9 +46,9 @@ const Welcome = () => {
             <WelcomeLists />
           </View>
          <CustomButtom
-          buttonTextStyle={{ fontSize: responsiveFontSize(2) }}
+          buttonTextStyle={{ fontSize: scale(20) }}
               buttonstyle={{ width: "100%", borderColor: "#FFA100", padding: 15, backgroundColor: "#2E210A" }}
-              onPress={() => console.log("hello from get next")}
+              onPress={() => handleWelcome()}
               title={"Next"}
               />
 

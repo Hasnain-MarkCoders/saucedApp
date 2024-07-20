@@ -5,12 +5,38 @@ import { UNSPLASH_URL, VITE_UNSPLASH_ACCESSKEY } from "@env"
 import SingleSauce from '../SingleSauce/SingleSauce';
 import axios from 'axios';
 
-const SauceList = ({  title = "" , name=""}) => {
+const SauceList = ({  title = "" , name="", searchTerm=""}) => {
     const [data, setData] = useState([])
     const [page, setPage] = useState(1)
     const [hasMore, setHasMore] = useState(true)
     const [loading, setLoading] = useState(false);
+    useEffect(() => {
+        const fetchPhotos = async () => {
+            if (!searchTerm?.trim()) {
+                return
+            }
+            if (loading) return;
+            setLoading(true);
+            try {
+                const res = await axios.get(`${UNSPLASH_URL}/search/photos`, {
+                    params: {
+                        client_id: VITE_UNSPLASH_ACCESSKEY,
+                        page: page,
+                        query: searchTerm
+                    }
+                });
 
+                setData(prev => [ ...res.data.results,...prev]);
+
+            } catch (error) {
+                console.error('Failed to fetch photos:', error);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchPhotos();
+    }, [searchTerm, page]);
 
     useEffect(() => {
         const fetchPhotos = async () => {
@@ -24,7 +50,6 @@ const SauceList = ({  title = "" , name=""}) => {
                         page: page
                     }
                 });
-                console.log("page", page)
                 if (res.data.length === 0) {
                     setHasMore(false);
                 } else {

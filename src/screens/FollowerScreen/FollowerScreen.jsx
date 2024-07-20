@@ -1,7 +1,8 @@
-import { ImageBackground, SafeAreaView, StyleSheet, ScrollView, Text, View, Keyboard } from 'react-native'
+import { ImageBackground, SafeAreaView, StyleSheet, Text, View, Keyboard } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import Header from '../../components/Header/Header.jsx'
 import home from './../../../assets/images/home.png';
+import search from './../../../assets/images/search_icon.png';
 import { scale, verticalScale } from 'react-native-size-matters';
 import { UNSPLASH_URL, VITE_UNSPLASH_ACCESSKEY } from "@env"
 import axios from 'axios';
@@ -25,11 +26,9 @@ const FollowerScreen = () => {
     useEffect(() => {
         const showSubscription = Keyboard.addListener("keyboardDidShow", () => {
             setIsKeyBoard(true)
-          console.log('Keyboard is open');
         });
         const hideSubscription = Keyboard.addListener("keyboardDidHide", () => {
             setIsKeyBoard(false)
-          console.log('Keyboard is closed');
         });
     
         // Cleanup function
@@ -43,9 +42,7 @@ const FollowerScreen = () => {
             if (!query?.search?.trim()) {
                 return
             }
-            console.log("query.search", query.search)
             if (loading) return;
-            console.log("page", page)
             setLoading(true);
             try {
                 const res = await axios.get(`${UNSPLASH_URL}/search/photos`, {
@@ -82,8 +79,6 @@ const FollowerScreen = () => {
                         page: page
                     }
                 });
-                console.log("page", page)
-        console.log("loading", loading)
 
                 if (res.data.length === 0) {
                     setHasMore(false);
@@ -132,6 +127,10 @@ const FollowerScreen = () => {
                                         Followers
                                     </Text>
                                     <CustomInput
+                                      imageStyles={{top:"50%", transform: [{ translateY: -0.5 * scale(25) }], width:scale(25), height:scale(25), aspectRatio:"1/1"}}
+                                      isURL={false}
+                                      showImage={true}
+                                      uri={search}
                                         cb={() => setPage(1)}
                                         name="search"
                                         onChange={handleText}
@@ -147,6 +146,7 @@ const FollowerScreen = () => {
                                             borderWidth: 1,
                                             borderRadius: 10,
                                             padding: 15,
+                                            paddingLeft:scale(45)
 
                                         }} />
                                 </View>}
@@ -166,7 +166,7 @@ const FollowerScreen = () => {
                                         All Followers
                                     </Text>
                                     
-                                     <FollowersList loading={loading} hasMore={hasMore} setPage={setPage} data={data} /></View>
+                                     <FollowersList title="Follow"  loading={loading} hasMore={hasMore} setPage={setPage} data={data} /></View>
                                    
                                 }
                             </View>

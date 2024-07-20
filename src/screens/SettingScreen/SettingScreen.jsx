@@ -8,22 +8,19 @@ import { useNavigation } from '@react-navigation/native';
 import { scale } from 'react-native-size-matters';
 import { useDispatch, useSelector } from 'react-redux';
 import { handleAuth } from '../../../android/app/Redux/userReducer';
-import CustomEditModal from '../../components/EditModal.jsx/EditModal';
-import Snackbar from 'react-native-snackbar';
 import CustomConfirmModal from '../../components/CustomConfirmModal/CustomConfirmModal';
-import useAxios from '../../../Axios/useAxios';
+import auth from '@react-native-firebase/auth';
+
 const SettingScreen = () => {
-    const auth = useSelector(state=>state.auth)
     const navigation = useNavigation()
     const [showBlockModal, setShowBlockmodal] = useState(false)
     const [showDeleteModal, setShowDeleteModal] = useState(false)
     const [loading, setLoading] = useState(false)
     const [isEnabled, setIsEnabled] = useState(true)
-    console.log(auth)
  const dispatch = useDispatch()
- const axiosInstance = useAxios()
 
-    const handleLogout=()=>{
+    const handleLogout= async()=>{
+        await auth().signOut()
         dispatch(  handleAuth({
             "token": null,
             "uid": null,

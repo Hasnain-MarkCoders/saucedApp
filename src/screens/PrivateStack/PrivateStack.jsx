@@ -1,4 +1,4 @@
-import { View, Image, Text } from 'react-native';
+import { View, Image, Text, Vibration } from 'react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Home from '../Home/Home';
 import homeIcon from "./../../../assets/images/homeicon.png";
@@ -6,7 +6,6 @@ import Awards from '../Awards/Awards';
 import awardicon from "./../../../assets/images/awardicon.png"
 import profileicon from "./../../../assets/images/profileicon.png"
 import ProfileScreen from '../Profile/Profile';
-import Product from '../Product/Product';
 import QRScreen from '../QRScreen/QRScreen';
 import qrImage from "./../../../assets/images/qr_transparent.png"
 import search from "./../../../assets/images/search.png"
@@ -17,7 +16,6 @@ const Tab = createBottomTabNavigator();
 const PrivateStack = () => {
     const logScreenNameOnFocus = ({ route }) => ({
         focus: () => {
-            console.log("Selected Drawer Tab:", route.name);
             Vibration.vibrate(10)
         },
     });
@@ -25,7 +23,6 @@ const PrivateStack = () => {
     return (
         <Tab.Navigator
         tabBarOnPress={()=>{
-            console.log("hasnain")
         }}
             screenOptions={{
                 tabBarShowLabel: false,

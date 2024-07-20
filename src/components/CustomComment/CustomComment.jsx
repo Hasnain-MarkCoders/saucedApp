@@ -10,7 +10,6 @@ const CustomComment = ({
     profileUri="",
     showImages=false,
 }) => {
-    console.log(showImages)
     const [commentStatus , setCommentStatus] = useState(false)
   return (
     <View style={{

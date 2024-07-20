@@ -1,11 +1,11 @@
-import { ImageBackground, SafeAreaView, StyleSheet, ScrollView, Text, View, Keyboard } from 'react-native'
+import { ImageBackground, SafeAreaView, StyleSheet, Text, View, Keyboard } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import Header from '../../components/Header/Header.jsx'
 import home from './../../../assets/images/home.png';
+import search from './../../../assets/images/search_icon.png';
 import { scale, verticalScale } from 'react-native-size-matters';
 import { UNSPLASH_URL, VITE_UNSPLASH_ACCESSKEY } from "@env"
 import axios from 'axios';
-import FollowersList from '../../components/FollowersList/FollowersList.jsx';
 import { useNavigation } from '@react-navigation/native';
 import { FlatList } from 'react-native-gesture-handler';
 import HorizontalUsersList from '../../components/HorizontalUsersList/HorizontalUsersList.jsx';
@@ -26,11 +26,9 @@ const ProfileScreen = () => {
     useEffect(() => {
         const showSubscription = Keyboard.addListener("keyboardDidShow", () => {
             setIsKeyBoard(true)
-            console.log('Keyboard is open');
         });
         const hideSubscription = Keyboard.addListener("keyboardDidHide", () => {
             setIsKeyBoard(false)
-            console.log('Keyboard is closed');
         });
 
         // Cleanup function
@@ -46,7 +44,6 @@ const ProfileScreen = () => {
             }
             console.log("query.search", query.search)
             if (loading) return;
-            console.log("page", page)
             setLoading(true);
             try {
                 const res = await axios.get(`${UNSPLASH_URL}/search/photos`, {
@@ -83,7 +80,6 @@ const ProfileScreen = () => {
                         page: page
                     }
                 });
-                console.log("page", page)
                 if (res.data.length === 0) {
                     setHasMore(false);
                 } else {
@@ -101,14 +97,14 @@ const ProfileScreen = () => {
         <ImageBackground style={{ flex: 1, width: '100%', height: '100%' }} source={home}>
             <SafeAreaView style={{ flex: 1, paddingBottom: isKeyBoard ? 0 : verticalScale(75) }}>
 
-                <Header cb={() => navigation.goBack()} showProfilePic={false} headerContainerStyle={{
+                <Header showMenu={true} cb={() => navigation.goBack()} showProfilePic={false} headerContainerStyle={{
                     paddingBottom: scale(20)
                 }} showText={false} />
 
                 <FlatList
                     showsHorizontalScrollIndicator={false}
                     showsVerticalScrollIndicator={false}
-                    data={[1, 1, 1,1]}
+                    data={[1, 1, 1, 1]}
                     renderItem={({ item, index }) => {
                         return (
                             <View style={{
@@ -144,8 +140,11 @@ const ProfileScreen = () => {
                                         <View style={{
                                             marginBottom: scale(20)
                                         }}>
-
                                             <CustomInput
+                                                imageStyles={{ top: "50%", transform: [{ translateY: -0.5 * scale(25) }], width: scale(25), height: scale(25), aspectRatio: "1/1" }}
+                                                isURL={false}
+                                                showImage={true}
+                                                uri={search}
                                                 cb={() => setPage(1)}
                                                 name="search"
                                                 onChange={handleText}
@@ -161,6 +160,7 @@ const ProfileScreen = () => {
                                                     borderWidth: 1,
                                                     borderRadius: 10,
                                                     padding: 15,
+                                                    paddingLeft: scale(45)
 
                                                 }} />
                                         </View>
@@ -180,7 +180,7 @@ const ProfileScreen = () => {
                                 {
                                     index == 2 && <View style={{
                                         marginTop: scale(50),
-                                        gap:scale(40)
+                                        gap: scale(40)
                                     }}>
 
                                         <SauceList title='My Favorites' data={topRatedSauces} />
@@ -190,12 +190,12 @@ const ProfileScreen = () => {
 
                                 }
 
-{
+                                {
                                     index == 3 && <View style={{
                                         marginTop: scale(50)
                                     }}>
 
-                                        <SauceList title='My List 1' data={topRatedSauces} />
+                                        <SauceList title='My List 1' />
                                     </View>
 
                                 }

@@ -1,15 +1,14 @@
-import { ImageBackground, SafeAreaView, ScrollView, StyleSheet, Text, Vibration, View } from 'react-native'
+import { ImageBackground, SafeAreaView, StyleSheet, Text, Vibration, View } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import Header from '../../components/Header/Header'
 import home from './../../../assets/images/home.png';
-import Banner from '../../components/Banner/Banner';
 import { s, scale, verticalScale } from 'react-native-size-matters';
 import { UNSPLASH_URL, VITE_UNSPLASH_ACCESSKEY } from "@env"
 import axios from 'axios';
-import BannerList from '../../components/BannerList/BannerList';
 import AwardList from '../../components/AwardList/AwardList.jsx';
 import { FlatList, TouchableOpacity } from 'react-native-gesture-handler';
 import { useNavigation } from '@react-navigation/native';
+import CustomAlertModal from '../../components/CustomAlertModal/CustomAlertModal.jsx';
 
 const Awards = () => {
     const [data, setData] = useState([])
@@ -17,6 +16,7 @@ const Awards = () => {
     const [hasMore, setHasMore] = useState(true)
     const [loading, setLoading] = useState(false);
     const navigation = useNavigation()
+    const [alertModal, setAlertModal]=useState(false)
     useEffect(() => {
         const fetchPhotos = async () => {
             if (!hasMore || loading) return;
@@ -50,6 +50,7 @@ const Awards = () => {
             
             style={{ flex: 1, paddingBottom: verticalScale(65) }}>
                 <Header
+                showMenu={true}
                 cb={() => navigation.goBack()}
                 
                 
@@ -144,8 +145,10 @@ const Awards = () => {
                                     <TouchableOpacity onPress={()=>
                                         {
                                             Vibration.vibrate(10)
+                                            setAlertModal(true)
                                         }
                                     }>
+
                                         <Text style={{
                                             fontSize:scale(10),
                                             lineHeight:scale(12),
@@ -176,7 +179,11 @@ const Awards = () => {
                     }}
 
                 />
-
+     <CustomAlertModal
+                            title='points feature live soon.'
+                            modalVisible={alertModal}
+                            setModalVisible={()=>setAlertModal(false)}
+                            />
             </SafeAreaView>
         </ImageBackground>
     )

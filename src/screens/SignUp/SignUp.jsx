@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Text, View, SafeAreaView, ImageBackground, TouchableOpacity, Dimensions, ScrollView, Alert, Image, Vibration } from 'react-native';
+import { Text, View, SafeAreaView, ImageBackground, TouchableOpacity, Dimensions, ScrollView, Alert, Image, Vibration, ActivityIndicator } from 'react-native';
 import home from './../../../assets/images/home.png';
 import Header from '../../components/Header/Header';
 import CustomInput from '../../components/CustomInput/CustomInput';
@@ -19,21 +19,17 @@ import FacebookSignInBTN from '../../components/FacebookSignInBTN/FacebookSignIn
 import { scale } from 'react-native-size-matters';
 import { LoginManager, AccessToken } from 'react-native-fbsdk-next';
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
-
+import openEye from "./../../../assets/images/openEye.png"
+import CustomAlertModal from '../../components/CustomAlertModal/CustomAlertModal';
 // Get screen dimensions
-const { width } = Dimensions.get('window');
-
-// Utility for responsive font size
-const responsiveFontSize = (f) => {
-  const tempHeight = (16 / 9) * width;
-  return Math.sqrt(Math.pow(tempHeight, 2) + Math.pow(width, 2)) * (f / 100);
-};
 
 const SignUp = () => {
   const dispatch = useDispatch()
   const axiosInstance = useAxios()
+  const [message, setMessage] = useState("")
   const [isEnabled, setIsEnabled] = useState(true);
   const [loading, setLoading] = useState(false)
+  const [authLoading , setAuthLoading]= useState(false)
   const navigation = useNavigation()
   const [data, setData] = useState({
     fullName: "",
@@ -41,24 +37,30 @@ const SignUp = () => {
     password: ""
   });
 
+  const [alertModal, setAlertModal] =useState(false)
   const handleSignUp = async () => {
-
-
-    // Input validation
     if (!data.fullName) {
       setIsEnabled(true); // Re-enable the button
-      return Alert.alert("Full Name is required!");
+      setAlertModal(true)
+      setMessage("Full Name is required!")
+      return 
     }
     if (!data.email) {
       setIsEnabled(true); // Re-enable the button
-      return Alert.alert("Email is required!");
+      setAlertModal(true)
+      setMessage("Email is required!")
+      return
     }
     if (!data.password) {
       setIsEnabled(true); // Re-enable the button
-      return Alert.alert("Password is required!");
+      setAlertModal(true)
+      setMessage("Password is required!")
+      return 
     }
     setIsEnabled(false); // Disable the button at the start
     setLoading(true)
+    setAuthLoading(true)
+
     try {
       // Create user with email and password
       const userCredentials = await auth().createUserWithEmailAndPassword(data.email, data.password);
@@ -71,10 +73,11 @@ const SignUp = () => {
 
         // Fetch the token
         const token = await user.getIdToken();
-        console.log('Firebase Token:', token);
 
         // API call for additional authentication or user setup
         const myuser = await axiosInstance.post("/auth/firebase-authentication", { accessToken: token , name:data?.fullName});
+        console.log("<==myuserhnm==>", myuser)
+        console.log("<==firebasetokenhnm==>",token )
         if (myuser) {
           dispatch(
             handleAuth({
@@ -91,29 +94,39 @@ const SignUp = () => {
               "welcome":myuser?.data?.user?.welcome
             }))
         }
+        setAuthLoading(false)
      
       } else {
         console.log('No user found');
-        Alert.alert('No user found');
+        setAlertModal(true)
+        setMessage('No user found')
+     
       }
     } catch (error) {
+ setAuthLoading(false)
+
       console.error(error);
       if (error.code === 'auth/email-already-in-use') {
-        Alert.alert('That email address is already in use!');
+        setAlertModal(true)
+        setMessage('That email address is already in use!')
       } else if (error.code === 'auth/invalid-email') {
-        Alert.alert('That email address is invalid!');
+        setAlertModal(true)
+        setMessage('That email address is invalid!')
       } else {
-        Alert.alert(`An error occurred: ${error.message || error.toString()}`);
+        setAlertModal(true)
+        setMessage(`An error occurred: ${error.message || error.toString()}`)
       }
     } finally {
       setIsEnabled(true); // Re-enable the button regardless of outcome
       setLoading(false)
+      setAuthLoading(false)
+
     }
   };
 
 
   const navigateToSignIn = () => {
-    navigation.navigate('SignIn')
+    navigation.goBack()
   }
   useEffect(() => {
     console.log(data)
@@ -123,10 +136,14 @@ const SignUp = () => {
 
   async function onFacebookButtonPress() {
     // Attempt login with permissions
+     setAuthLoading(true)
+
     try{
         const result = await LoginManager.logInWithPermissions(['public_profile', 'email']);
   
         if (result.isCancelled) {
+          setAlertModal(true)
+          setMessage('User cancelled the login process')
           throw 'User cancelled the login process';
         }
       
@@ -134,6 +151,8 @@ const SignUp = () => {
         const data = await AccessToken.getCurrentAccessToken();
       
         if (!data) {
+          setAlertModal(true)
+          setMessage('Something went wrong obtaining access token')
           throw 'Something went wrong obtaining access token';
         }
       
@@ -144,6 +163,11 @@ const SignUp = () => {
         const userCredential = await auth().signInWithCredential(facebookCredential);
         const firebaseIdToken = await userCredential.user.getIdToken();
         const myuser = await axiosInstance.post("/auth/firebase-authentication", { accessToken: firebaseIdToken });
+        if (firebaseIdToken == myuser?.data?.user?.token){
+          console.log("ek hi token ha")
+        }else{
+          console.log("alag ha token")
+        }
         if (myuser) {
           dispatch(
             handleAuth({
@@ -160,25 +184,42 @@ const SignUp = () => {
               "welcome":myuser?.data?.user?.welcome
             }))
         }
+      setAuthLoading(false)
+
       } catch (error) {
+ setAuthLoading(false)
+
    // Handle specific errors
    if (error.code === 'auth/email-already-in-use') {
-     Alert.alert('That email address is already in use!');
+    setAlertModal(true)
+    setMessage('That email address is already in use!')
+     setAuthLoading(false)
+
    } else if (error.code === 'auth/invalid-email') {
-     Alert.alert('That email address is invalid!');
+     setAlertModal(true)
+     setMessage('That email address is invalid!')
+     setAuthLoading(false)
+
    } else {
      console.error(error);
-     Alert.alert('An error occurred during login');
+     setAlertModal(true)
+     setMessage('An error occurred during login')
+     setAuthLoading(false)
+
    }
  } finally {
    setIsEnabled(true); // Re-enable button or other elements
    setLoading(false)
+   setAuthLoading(false)
+
  }
    
   }
 
 
   const signInWithGoogle = async () => {
+ setAuthLoading(true)
+
     try{
      await GoogleSignin.hasPlayServices({showPlayServicesUpdateDialog: true})
      const { idToken } = await GoogleSignin.signIn();
@@ -203,19 +244,33 @@ const SignUp = () => {
             "welcome":myuser?.data?.user?.welcome
           }))
       }
+      setAuthLoading(false)
+
     } catch (error) {
+ setAuthLoading(false)
+
  // Handle specific errors
  if (error.code === 'auth/email-already-in-use') {
-   Alert.alert('That email address is already in use!');
+  setAlertModal(true)
+  setMessage('That email address is already in use!')
+   setAuthLoading(false)
+
  } else if (error.code === 'auth/invalid-email') {
-   Alert.alert('That email address is invalid!');
+  setAlertModal(true)
+  setMessage('That email address is invalid!')
+   setAuthLoading(false)
+
  } else {
    console.error(error);
-   Alert.alert('An error occurred during login');
+   setAlertModal(true)
+   setMessage('An error occurred during login')
+   setAuthLoading(false)
+
  }
 } finally {
  setIsEnabled(true); // Re-enable button or other elements
  setLoading(false)
+ setAuthLoading(false)
 }
 
  };
@@ -233,6 +288,11 @@ const SignUp = () => {
 }, []);
 
 
+if(authLoading){
+  return  <ImageBackground style={{ flex: 1, justifyContent: 'center', alignItems: 'center', width: '100%', height: '100%' }} source={home}>
+  <ActivityIndicator  color="#FFA100" size="large" />
+</ImageBackground>
+}
   return (
     <ImageBackground style={{ flex: 1, width: '100%', height: '100%', }} source={home}>
       <SafeAreaView style={{ flex: 1}}>
@@ -240,9 +300,9 @@ const SignUp = () => {
           showsHorizontalScrollIndicator={false}
           showsVerticalScrollIndicator={false}
          >
-          <Header cb={()=>{navigateToSignIn(); Vibration.vibrate(10)}} title="Sign up" description="Sign up with one of the following." />
+          <Header showMenu={false} showProfilePic={false} cb={()=>{navigateToSignIn(); Vibration.vibrate(10)}} title="Sign up" description="Sign up with one of the following." />
           <View style={{ paddingHorizontal: scale(20), flex: 1, justifyContent: "space-between", paddingVertical:scale(30), gap: 40 }}>
-            <View style={{ gap: 20 }}>
+            <View style={{ gap: scale(20), marginBottom:scale(40) }}>
               <CustomInput
                 onChange={handleText}
                 updaterFn={setData}
@@ -257,7 +317,14 @@ const SignUp = () => {
                 title="Email"
                 name="email"
               />
+              <View style={{
+                gap:scale(10)
+              }}>
               <CustomInput
+                imageStyles={{top:"50%", left:"90%", transform: [{ translateY: -0.5 * scale(20) }], width:scale(20), height:scale(20)}}
+                isURL={false}
+                showImage={true}
+                uri={openEye}
                 onChange={handleText}
                 updaterFn={setData}
                 value={data.password}
@@ -265,24 +332,28 @@ const SignUp = () => {
                 name="password"
                 secureTextEntry={true}
               />
+
+              <TouchableOpacity 
+              onPress={()=>{
+                setAlertModal(true)
+                setMessage("This feature live soon")}
+              }>
+              <Text style={{
+                color:"#C1C1C1",
+                fontSize:scale(12),
+                lineHeight:scale(25),
+              }}>Please create strong password</Text>
+              </TouchableOpacity>
+              </View>
             </View>
             <View style={{ alignItems: "center", gap: 20 }}>
               <CustomButtom
               loading={loading}
                 buttonTextStyle={{ fontSize: scale(14) }}
-                buttonstyle={{ width: "100%", borderColor: "#FFA100", padding: 15, backgroundColor: "#2E210A" }}
+                buttonstyle={{ width: "100%", borderColor: "#FFA100", padding: scale(15), backgroundColor: "#2E210A" }}
                 onPress={() => isEnabled ? (handleSignUp(), Vibration.vibrate(10)) : null}
                 title={"Sign Up"}
               />
-              {/* <View style={{
-                flexDirection: "row",
-                justifyContent: "center",
-                alignItems: "center"
-              }}>
-                 <GoogleSignInBTN onPress={() => console.log("hello from Google Sign Up")} url={google} />
-                <IconButton onPress={() => console.log("hello from Apple Sign Up")} url={apple} />
-                <FacebookSignInBTN onPress={() => console.log("hello from Facebook Sign Up")} url={fb} />
-              </View> */}
                 <Text style={{
               color:"#FFA100",
               fontSize:scale(25),
@@ -315,13 +386,18 @@ const SignUp = () => {
               />
             </View>
               <View style={{ flexDirection: "row", marginTop:scale(20), alignItems:"center" }}>
-                <Text style={{ color: "white", fontSize: responsiveFontSize(1.6), lineHeight: 18 }}>Already Have an account? </Text>
-                <TouchableOpacity onPress={() => [navigateToSignIn(), Vibration.vibrate(10)]} >
+                <Text style={{ color: "white", fontSize: scale(14), lineHeight: 18 }}>Already Have an account? </Text>
+                <TouchableOpacity onPress={() => {navigation.navigate("SignIn"), Vibration.vibrate(10)}} >
                   <Text style={{ color: "#FFA100", fontSize: scale(14), marginTop:scale(3),lineHeight: 18 , paddingHorizontal:scale(4)}}>Login</Text>
                 </TouchableOpacity>
               </View>
             </View>
           </View>
+          <CustomAlertModal
+                            title={message}
+                            modalVisible={alertModal}
+                            setModalVisible={()=>setAlertModal(false)}
+                            />
         </ScrollView>
       </SafeAreaView>
     </ImageBackground>

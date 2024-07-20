@@ -11,12 +11,10 @@ import { handleText } from '../../../utils.js';
 import CustomInput from '../../components/CustomInput/CustomInput.jsx';
 import { FlatList } from 'react-native-gesture-handler';
 import CustomButtom from '../../components/CustomButtom/CustomButtom.jsx';
+import CustomAlertModal from '../../components/CustomAlertModal/CustomAlertModal.jsx';
 const SouceDetails = () => {
-    const [data, setData] = useState([])
-    const [page, setPage] = useState(1)
-    const [hasMore, setHasMore] = useState(true)
-    const [loading, setLoading] = useState(false)
     const [isKeyBoard, setIsKeyBoard]= useState(false)
+    const [alertModal,setAlertModal ] = useState(false)
     const [query, setQuery] = useState({
         name: "",
         title: "",
@@ -24,19 +22,13 @@ const SouceDetails = () => {
 
     });
     const navigation = useNavigation()
-    
-
     useEffect(() => {
         const showSubscription = Keyboard.addListener("keyboardDidShow", () => {
             setIsKeyBoard(true)
-          console.log('Keyboard is open');
         });
         const hideSubscription = Keyboard.addListener("keyboardDidHide", () => {
             setIsKeyBoard(false)
-          console.log('Keyboard is closed');
         });
-    
-        // Cleanup function
         return () => {
           showSubscription.remove();
           hideSubscription.remove();
@@ -46,7 +38,9 @@ const SouceDetails = () => {
     return (
         <ImageBackground style={{ flex: 1, width: '100%', height: '100%' }} source={home}>
             <SafeAreaView style={{ flex: 1, paddingBottom: isKeyBoard ? 0 :verticalScale(0) }}>
-                <Header cb={() => navigation.navigate("Home")} showProfilePic={false} headerContainerStyle={{
+                <Header cb={() => navigation.navigate("Home")} 
+                showMenu={false}
+                showProfilePic={false} headerContainerStyle={{
                     paddingBottom: scale(20)
                 }} title={"Followers"} showText={false} />
                 <FlatList 
@@ -144,7 +138,7 @@ const SouceDetails = () => {
                                 showIcon={false}
                                 buttonTextStyle={{ fontSize: scale(14) }}
                                 buttonstyle={{ width: "100%",marginTop:scale(60), borderColor: "#FFA100", backgroundColor: "#2e210a", paddingHorizontal: scale(15), paddingVertical:scale(13), display: "flex", gap: 10, flexDirection: "row-reverse", alignItems: "center", justifyContent: "center" }}
-                                onPress={() => {Vibration.vibrate(10) ;Alert.alert("sauce request submitted.", console.log(query))}}
+                                onPress={() => {Vibration.vibrate(10) ;setAlertModal(true)}}
                                 title={"Submit"}
                             />
                                     </View>
@@ -156,6 +150,11 @@ const SouceDetails = () => {
                         )
                     }}
                 />
+                     <CustomAlertModal 
+                            title='Submitted Succesfully.'
+                            modalVisible={alertModal}
+                            setModalVisible={()=>setAlertModal(false)}
+                            />
             </SafeAreaView>
         </ImageBackground>
     )

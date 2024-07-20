@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Image, Text, Vibration } from 'react-native';
+import { Vibration } from 'react-native';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import FollowerScreen from '../FollowerScreen/FollowerScreen';
 import FollowingScreen from '../FollowingScreen/FollowingScreen';
@@ -14,7 +14,6 @@ const Drawer = createDrawerNavigator();
 const DrawerStack = () => {
     const logScreenNameOnFocus = ({ route }) => ({
         focus: () => {
-            console.log("Selected Drawer Tab:", route.name);
             Vibration.vibrate(10)
         },
     });

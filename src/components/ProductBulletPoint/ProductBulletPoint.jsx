@@ -3,7 +3,6 @@ import React from 'react'
 import dot from "./../../../assets/images/dot.png"
 import { scale } from 'react-native-size-matters'
 const ProductBulletPoint = ({text, textStyles}) => {
-  console.log(textStyles)
   return (
     <View
     style={{

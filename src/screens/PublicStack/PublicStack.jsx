@@ -17,7 +17,6 @@ const PublicStack = () => {
         >
             <Stack.Screen name="GetStarted" component={GetStarted} />
             <Stack.Screen name="SocialSignIn" component={SocialSignIn} />
-
             <Stack.Screen name="SignIn" component={SignIn} />
             <Stack.Screen name="SignUp" component={SignUp} />
             

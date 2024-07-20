@@ -1,19 +1,32 @@
 import { ActivityIndicator, StyleSheet, Text, View } from 'react-native'
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { FlatList } from 'react-native-gesture-handler';
 import UserCard from '../UserCard/UserCard';
 import { scale } from 'react-native-size-matters';
+import CustomConfirmModal from '../CustomConfirmModal/CustomConfirmModal';
 
 const FollowersList = ({
     data=[],
     hasMore=true,
     setPage=()=>{},
     loading=false,
-    numColumns=2
+    numColumns=2,
+    title="",
 }) => {
-  useEffect(()=>{
-console.log(loading)
-  },[loading])
+const [modalVisible, setModalVisible] = useState(false)
+const [modalLoading, setModalLoading] = useState(false)
+const [modalTitle, setModalTitle]=useState("")
+  const handleOpenModal =  (item)=>{
+    setModalTitle(`${title}  ${item.user.username}`)
+    setModalVisible(true)
+  }
+  const handleFollow =  ()=>{
+    setModalLoading(true)
+    setTimeout(()=>{
+      setModalLoading(false)
+     },2000)
+  }
+ 
   return (
     
    <View style={{
@@ -33,13 +46,14 @@ console.log(loading)
         }
       }}
        keyExtractor={(item, index) => index.toString()}
-       renderItem={({ item }) => <UserCard url={item?.urls?.small} title={"Follow"} name={item?.user?.username} showText={false} />}
+       renderItem={({ item }) => <UserCard cb={handleOpenModal} item={item} url={item?.urls?.small} title={title} name={item?.user?.username} showText={false} />}
 
    />
    {
 
     loading &&   <ActivityIndicator size="small" color="#FFA100" />
     }
+    <CustomConfirmModal cb={handleFollow} loading={modalLoading} title={modalTitle} modalVisible={modalVisible} setModalVisible={()=>{setModalVisible(false)}} />
 
 </View>
 

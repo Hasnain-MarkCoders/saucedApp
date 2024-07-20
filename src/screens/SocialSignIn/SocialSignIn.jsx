@@ -1,14 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { Text, View, SafeAreaView, ImageBackground, TouchableOpacity, Dimensions, ScrollView, Alert, Image, Vibration } from 'react-native';
+import { Text, View, SafeAreaView, ImageBackground, ScrollView,  Image, Vibration, ActivityIndicator } from 'react-native';
 import home from './../../../assets/images/home.png';
 import Header from '../../components/Header/Header';
-import CustomInput from '../../components/CustomInput/CustomInput';
-import { handleText } from '../../../utils';
 import CustomButtom from '../../components/CustomButtom/CustomButtom';
 import google from "./../../../assets/images/google-icon.png";
-import apple from "./../../../assets/images/apple-icon.png";
 import fb from "./../../../assets/images/facebook-icon.png";
-import IconButton from '../../components/IconButton/IconButton';
 import { useNavigation } from '@react-navigation/native';
 import { useDispatch } from 'react-redux';
 import { handleAuth } from '../../../android/app/Redux/userReducer';
@@ -16,24 +12,16 @@ import { scale } from 'react-native-size-matters';
 import envelope from "./../../../assets/images/envelope.png";
 import {
   GoogleSignin,
-  isErrorWithCode,
-  statusCodes,
 } from "@react-native-google-signin/google-signin";
 import auth from '@react-native-firebase/auth';
 import useAxios from '../../../Axios/useAxios';
 import { LoginManager, AccessToken } from 'react-native-fbsdk-next';
+import CustomAlertModal from '../../components/CustomAlertModal/CustomAlertModal';
 
-// Get screen dimensions
-const { width } = Dimensions.get('window');
 
-// Utility for responsive font size
-// const scale = (f) => {
-//   const tempHeight = (16 / 9) * width;
-//   return Math.sqrt(Math.pow(tempHeight, 2) + Math.pow(width, 2)) * (f / 100);
-// };
 
 const SocialSignIn = () => {
-
+    
   const navigation = useNavigation()
   const [data, setData] = useState({
     email: "",
@@ -52,6 +40,8 @@ const SocialSignIn = () => {
     const dispatch = useDispatch()
     const [isEnabled, setIsEnabled] = useState(true);
     const [loading, setLoading] = useState(false)
+    const [alertModal, setAlertModal] =useState(false)
+    const [message, setMessage] = useState("")
     useEffect(() => {
              GoogleSignin.configure({
               scopes: ['https://www.googleapis.com/auth/userinfo.email', 'https://www.googleapis.com/auth/userinfo.profile'], // what API you want to access on behalf of the user, default is email and profile
@@ -66,14 +56,17 @@ const SocialSignIn = () => {
     }, []);
 
     const signInWithGoogle = async () => {
+      setLoading(true)
          try{
           await GoogleSignin.hasPlayServices({showPlayServicesUpdateDialog: true})
           const { idToken } = await GoogleSignin.signIn();
           const googleCredential = auth.GoogleAuthProvider.credential(idToken);
            const res =   await auth().signInWithCredential(googleCredential)
            const firebaseToken = await res.user.getIdToken();
-           console.log(firebaseToken)
            const myuser = await axiosInstance.post("/auth/firebase-authentication", { accessToken: firebaseToken });
+           console.log("firebaseToken==>", firebaseToken)
+           console.log("myuser google==>", myuser)
+           
            if (myuser) {
              dispatch(
                handleAuth({
@@ -93,12 +86,15 @@ const SocialSignIn = () => {
          } catch (error) {
       // Handle specific errors
       if (error.code === 'auth/email-already-in-use') {
-        Alert.alert('That email address is already in use!');
+        setMessage('That email address is already in use!')
+        setAlertModal(true)
       } else if (error.code === 'auth/invalid-email') {
-        Alert.alert('That email address is invalid!');
+        setMessage('That email address is invalid!')
+        setAlertModal(true)
       } else {
         console.error(error);
-        Alert.alert('An error occurred during login');
+        setMessage('An error occurred during login')
+        setAlertModal(true)
       }
     } finally {
       setIsEnabled(true); // Re-enable button or other elements
@@ -109,11 +105,15 @@ const SocialSignIn = () => {
 
 
       async function onFacebookButtonPress() {
+      setLoading(true)
+
         // Attempt login with permissions
         try{
             const result = await LoginManager.logInWithPermissions(['public_profile', 'email']);
       
             if (result.isCancelled) {
+              setMessage('User cancelled the login process')
+              setAlertModal(true)
               throw 'User cancelled the login process';
             }
           
@@ -121,6 +121,8 @@ const SocialSignIn = () => {
             const data = await AccessToken.getCurrentAccessToken();
           
             if (!data) {
+              setMessage('Something went wrong obtaining access token')
+              setAlertModal(true)
               throw 'Something went wrong obtaining access token';
             }
           
@@ -131,6 +133,8 @@ const SocialSignIn = () => {
             const userCredential = await auth().signInWithCredential(facebookCredential);
             const firebaseIdToken = await userCredential.user.getIdToken();
             const myuser = await axiosInstance.post("/auth/firebase-authentication", { accessToken: firebaseIdToken });
+            console.log("firebaseToken==>", firebaseIdToken)
+            console.log("myuser google==>", myuser)
             if (myuser) {
               dispatch(
                 handleAuth({
@@ -150,22 +154,29 @@ const SocialSignIn = () => {
           } catch (error) {
        // Handle specific errors
        if (error.code === 'auth/email-already-in-use') {
-         Alert.alert('That email address is already in use!');
+         setMessage('That email address is already in use!')
+         setAlertModal(true)
        } else if (error.code === 'auth/invalid-email') {
-         Alert.alert('That email address is invalid!');
+         setMessage('That email address is invalid!')
+         setAlertModal(true)
        } else {
          console.error(error);
-         Alert.alert('An error occurred during login');
+         setMessage('An error occurred during login')
+         setAlertModal(true)
        }
      } finally {
-       setIsEnabled(true); // Re-enable button or other elements
+       setIsEnabled(true);
        setLoading(false)
      }
        
       }
 
 
-
+if(loading){
+  return  <ImageBackground style={{ flex: 1, justifyContent: 'center', alignItems: 'center', width: '100%', height: '100%' }} source={home}>
+  <ActivityIndicator  color="#FFA100" size="large" />
+</ImageBackground>
+}
 
 
   return (
@@ -176,7 +187,7 @@ const SocialSignIn = () => {
         showsHorizontalScrollIndicator={false} 
         showsVerticalScrollIndicator={false}
         style={{ flex: 1 }}>
-          <Header cb={()=>{navigateToSignUp(); Vibration.vibrate(10)}} title="Sign in" description="Sign in with your data that you entered during registration." />
+          <Header showMenu={false} showProfilePic={false} cb={()=>{navigation.goBack(); Vibration.vibrate(10)}} title="Sign in" description="Sign in with your data that you entered during registration." />
           <View style={{ paddingHorizontal: 20, flex: 1, justifyContent: "space-between", paddingVertical: 40, paddingBottom: 100, gap: scale(10) }}>
 
             <View style={{ alignItems: "center", gap: 20 }}>
@@ -222,6 +233,11 @@ const SocialSignIn = () => {
           
             </View>
           </View>
+          <CustomAlertModal
+                            title={message}
+                            modalVisible={alertModal}
+                            setModalVisible={()=>setAlertModal(false)}
+                            />
         </ScrollView>
 
       </SafeAreaView>

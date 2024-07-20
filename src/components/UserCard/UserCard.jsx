@@ -4,11 +4,14 @@ import { scale } from 'react-native-size-matters'
 import CustomButtom from '../CustomButtom/CustomButtom'
 import Lightbox from 'react-native-lightbox';
 import { useNavigation } from '@react-navigation/native';
+import CustomConfirmModal from '../CustomConfirmModal/CustomConfirmModal';
 
-const UserCard = ({url="", name="", title=""}) => {
+const UserCard = ({url="",item={} ,name="", title="",cb=()=>{} }) => {
   const [LightBox, setLightBox] = useState(false)
 const navigation = useNavigation()
+
   return (
+  
     <TouchableOpacity
     onPress={()=>{
       navigation.navigate("ExternalProfileScreen", {
@@ -63,10 +66,11 @@ const navigation = useNavigation()
       
     
        <CustomButtom buttonTextStyle={{ fontSize: scale(12) }}
-              buttonstyle={{ width: "100%", borderColor: "#FFA100", padding: 8, backgroundColor: "#2E210A" }}onPress={()=>Alert.alert(`${title} ${name}`)} title={title}/> 
+              buttonstyle={{ width: "100%", borderColor: "#FFA100", padding: 8, backgroundColor: "#2E210A" }}onPress={()=>{cb(item)}} title={title}/> 
 
     </View>
     </TouchableOpacity>
+    
   )
 }
 

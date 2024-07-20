@@ -13,6 +13,7 @@ const navigation = useNavigation()
 const [selected, setSelected] = useState(true)
     return (
         <TouchableOpacity
+        activeOpacity={.8}
         onPress={()=>{navigation.navigate("ProductDetail", {url, title})}}
         onLongPress={()=>{setSelected(prev=>!prev)}}
         
